@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROIMOBI | Performance UA Marketing</title>
+    <style>
+        /* --- RESET & BASE STYLES --- */
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg: #141414;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --accent: #00FF94; /* Profit Green */
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: "Courier New", Courier, monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* --- UTILITIES --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .highlight { color: var(--accent); }
+        .mono { font-family: var(--font-mono); font-size: 0.9em; }
+
+        /* --- HEADER --- */
+        header {
+            padding: 40px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
+        }
+
+        nav a {
+            margin-left: 30px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        nav a:hover { color: var(--accent); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            padding: 100px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- APPROACH SECTION --- */
+        .approach {
+            padding: 80px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .approach-item h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .approach-item p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* --- CASES SECTION (GRID) --- */
+        .cases-section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 50px;
+            border-left: 3px solid var(--accent);
+            padding-left: 20px;
+        }
+
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .case-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border: 1px solid #222;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .case-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
+        }
+
+        .app-name { font-weight: 700; }
+        .app-cat { color: var(--text-muted); font-size: 0.9rem; }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .kpi-item span { display: block; }
+        .kpi-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+        .kpi-value { font-size: 1.4rem; font-weight: 700; color: var(--text-main); }
+        .kpi-value.green { color: var(--accent); }
+
+        .case-desc {
+            font-size: 0.9rem;
+            color: #aaa;
+            line-height: 1.5;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 80px 0;
+            border-top: 1px solid #222;
+            text-align: center;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background: var(--text-main);
+            color: var(--bg-color);
+            padding: 15px 40px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            margin-bottom: 30px;
+        }
+        .cta-btn:hover {
+            background: var(--accent);
+        }
+
+        .contacts a { margin: 0 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        .contacts a:hover { color: var(--text-main); }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .hero { padding: 60px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo mono">ROIMOBI<span class="highlight">.COM</span></div>
+            <nav>
+                <a href="#approach">Подход</a>
+                <a href="#cases">Кейсы</a>
+                <a href="#contact">Контакты</a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <div class="status-badge mono">User Acquisition Specialist</div>
+            <h1>Data-Driven<br>Mobile Growth.</h1>
+            <p class="subtitle">
+                Я не фокусируюсь на дешевых инсталлах. <br>
+                Я масштабирую приложения, ориентируясь на <span class="highlight">ROAS</span> и <span class="highlight">LTV</span>.
+            </p>
+        </section>
+
+        <section id="approach" class="approach">
+            <div class="approach-item">
+                <h3 class="mono">[01] Аналитика</h3>
+                <p>Настройка MMP, постбэков и предиктивных моделей. Если мы не можем это измерить, мы не можем это масштабировать.</p>
+            </div>
+            <div class="approach-item">
+                <h3 class="mono">[02] Креативы</h3>
+                <p>Генерация гипотез и A/B тесты. Поиск "Winning Creatives", которые пробивают баннерную слепоту и держат CPI.</p>
+            </div>
+            <div class="approach-item">
+                <h3 class="mono">[03] Масштаб</h3>
+                <p>Работа с Tier-1 источниками (FB, Google, TikTok, Unity). Агрессивное масштабирование при сохранении целевого ROAS.</p>
+            </div>
+        </section>
+
+        <section id="cases" class="cases-section">
+            <h2 class="section-title">Track Record</h2>
+            
+            <div class="cases-grid">
+                <div class="case-card">
+                    <div class="case-header">
+                        <span class="app-name">FinTech App</span>
+                        <span class="app-cat mono">Utility / EU</span>
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi-item">
+                            <span class="kpi-label">Spend / mo</span>
+                            <span class="kpi-value">$50k+</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-label">ROAS D30</span>
+                            <span class="kpi-value green">145%</span>
+                        </div>
+                    </div>
+                    <p class="case-desc">
+                        Снижение CPA на регистрацию на 30% за счет смены стратегии биддинга в Google UAC и внедрения UGC-креативов.
+                    </p>
+                </div>
+
+                <div class="case-card">
+                    <div class="case-header">
+                        <span class="app-name">Idle Tycoon Game</span>
+                        <span class="app-cat mono">Gamedev / US</span>
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi-item">
+                            <span class="kpi-label">Installs</span>
+                            <span class="kpi-value">150k</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-label">ROAS D7</span>
+                            <span class="kpi-value green">110%</span>
+                        </div>
+                    </div>
+                    <p class="case-desc">
+                        Масштабирование через TikTok Ads и Unity. Оптимизация на Purchase Event вместо Install, что подняло качество трафика.
+                    </p>
+                </div>
+
+                <div class="case-card">
+                    <div class="case-header">
+                        <span class="app-name">Health & Fitness</span>
+                        <span class="app-cat mono">Sub / Tier-1</span>
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi-item">
+                            <span class="kpi-label">Trials</span>
+                            <span class="kpi-value">12k+</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-label">CPA Trial</span>
+                            <span class="kpi-value green">-$15%</span>
+                        </div>
+                    </div>
+                    <p class="case-desc">
+                        Работа с SKAdNetwork на iOS 14.5+. Перестройка воронки онбординга для повышения конверсии в триал.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <footer id="contact">
+            <h2 style="margin-bottom: 20px;">Готовы к росту?</h2>
+            <a href="mailto:hello@roimobi.com" class="cta-btn">Написать на Email</a>
+            
+            <div class="contacts mono">
+                <a href="#">Telegram</a>
+                <a href="#">LinkedIn</a>
+                <a href="#">Upwork</a>
+            </div>
+            <p style="margin-top: 50px; font-size: 0.8rem; color: #444;">© 2024 ROIMOBI. All rights reserved.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
