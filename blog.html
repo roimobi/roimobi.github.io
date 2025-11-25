@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROIMOBI | Knowledge Base</title>
+    <style>
+        /* --- BASE STYLES --- */
+        :root {
+            --bg-color: #050505;
+            --card-bg: rgba(20, 20, 20, 0.6);
+            --col-bg: rgba(15, 15, 15, 0.5); /* Trello Column bg */
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --accent: #00FF94;
+            --accent-dim: rgba(0, 255, 148, 0.1);
+            --font-main: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: "JetBrains Mono", "Courier New", monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Ambient Glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -20%;
+            left: -20%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; } /* Шире для канбана */
+        .highlight { color: var(--accent); }
+        .mono { font-family: var(--font-mono); font-size: 0.9em; letter-spacing: -0.5px; }
+        .section-title { 
+            font-size: 2rem; 
+            margin-bottom: 40px; 
+            border-left: 3px solid var(--accent); 
+            padding-left: 20px; 
+            display: inline-block;
+            font-weight: 800;
+        }
+
+        /* LANGUAGE */
+        [data-lang-content] { display: none; }
+        body.lang-ru [data-lang-content="ru"] { display: block; }
+        body.lang-ru span[data-lang-content="ru"] { display: inline; }
+        body.lang-en [data-lang-content="en"] { display: block; }
+        body.lang-en span[data-lang-content="en"] { display: inline; }
+        body.lang-pl [data-lang-content="pl"] { display: block; }
+        body.lang-pl span[data-lang-content="pl"] { display: inline; }
+
+        /* HEADER */
+        header {
+            height: 90px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo a { font-weight: 800; font-size: 1.3rem; letter-spacing: -1px; text-transform: uppercase; }
+        .header-right { display: flex; align-items: center; }
+        nav { display: flex; gap: 30px; margin-right: 30px; padding-right: 30px; border-right: 1px solid #333; }
+        nav a { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        nav a:hover, nav a.active { color: var(--text-main); text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .lang-switcher { display: flex; gap: 15px; }
+        .lang-btn { background: none; border: none; color: #444; font-size: 0.85rem; cursor: pointer; font-family: var(--font-mono); font-weight: 700; transition: 0.3s; }
+        .lang-btn:hover { color: #888; }
+        .lang-btn.active { color: var(--accent); text-shadow: 0 0 10px var(--accent-dim); }
+
+        /* KANBAN SPECIFIC */
+        .kanban-section { padding: 60px 0 100px; }
+        
+        .kanban-board { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 25px; 
+            align-items: start; 
+        }
+
+        .kanban-col { 
+            background: var(--col-bg); 
+            border-radius: 8px; 
+            padding: 15px; 
+            min-height: 200px; 
+            border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(5px);
+        }
+
+        .kanban-header { 
+            font-size: 0.9rem; 
+            font-weight: 800; 
+            color: #fff; 
+            margin-bottom: 20px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            padding-bottom: 10px; 
+            border-bottom: 2px solid #333; 
+            display: flex; 
+            justify-content: space-between; 
+            font-family: var(--font-mono);
+        }
+        .kanban-header .count { color: var(--text-muted); }
+
+        .article-card { 
+            background: rgba(30,30,30,0.4); 
+            border-radius: 6px; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            cursor: pointer; 
+            border: 1px solid transparent; 
+            transition: 0.2s; 
+            position: relative; 
+        }
+        .article-card:hover { 
+            border-color: var(--accent); 
+            background: rgba(40,40,40,0.8); 
+            transform: translateY(-2px);
+        }
+
+        .article-tag { 
+            font-size: 0.65rem; 
+            padding: 2px 6px; 
+            border-radius: 3px; 
+            background: rgba(255,255,255,0.05); 
+            color: #aaa; 
+            margin-bottom: 10px; 
+            display: inline-block; 
+            font-family: var(--font-mono);
+        }
+        
+        /* New marker */
+        .article-card.new::after { 
+            content: ''; 
+            position: absolute; 
+            top: 15px; 
+            right: 15px; 
+            width: 6px; 
+            height: 6px; 
+            background: var(--accent); 
+            border-radius: 50%; 
+            box-shadow: 0 0 8px var(--accent); 
+        }
+
+        .article-title { 
+            font-size: 0.95rem; 
+            font-weight: 600; 
+            line-height: 1.4; 
+            color: #eee; 
+        }
+        
+        .article-meta {
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #555;
+            font-family: var(--font-mono);
+        }
+
+        /* FOOTER */
+        footer { padding: 80px 0; border-top: 1px solid #222; text-align: center; }
+        .cta-btn { 
+            display: inline-block; background: var(--text-main); color: #000; 
+            padding: 18px 45px; font-weight: 800; font-size: 1.1rem; border-radius: 4px; margin-bottom: 40px; 
+            transition: 0.3s;
+        }
+        .cta-btn:hover { background: var(--accent); box-shadow: 0 0 20px var(--accent-dim); transform: translateY(-2px); }
+        .contacts a { margin: 0 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        .contacts a:hover { color: var(--text-main); text-shadow: 0 0 5px #fff; }
+        .legal-info { margin-top: 30px; font-size: 0.75rem; color: #333; font-family: var(--font-mono); }
+
+        @media (max-width: 1100px) {
+            .nav-wrapper nav { display: none; }
+            .kanban-board { grid-template-columns: 1fr; gap: 40px; }
+            .kanban-col { margin-bottom: 0; }
+            .container { padding: 0 20px; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="lang-ru">
+
+    <header>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div class="logo mono">
+                <a href="index.html">ROIMOBI<span class="highlight">.COM</span></a>
+            </div>
+            
+            <div class="header-right">
+                <nav>
+                    <a href="index.html#approach" data-lang-content="ru">Подход</a>
+                    <a href="index.html#approach" data-lang-content="en">Approach</a>
+                    <a href="index.html#approach" data-lang-content="pl">Podejście</a>
+
+                    <a href="index.html#services" data-lang-content="ru">Услуги</a>
+                    <a href="index.html#services" data-lang-content="en">Services</a>
+                    <a href="index.html#services" data-lang-content="pl">Usługi</a>
+                    
+                    <a href="blog.html" class="active" data-lang-content="ru">Статьи</a>
+                    <a href="blog.html" class="active" data-lang-content="en">Blog</a>
+                    <a href="blog.html" class="active" data-lang-content="pl">Blog</a>
+
+                    <a href="index.html#cases" data-lang-content="ru">Кейсы</a>
+                    <a href="index.html#cases" data-lang-content="en">Cases</a>
+                    <a href="index.html#cases" data-lang-content="pl">Case'y</a>
+                </nav>
+
+                <div class="lang-switcher">
+                    <button class="lang-btn" onclick="setLang('ru')">RU</button>
+                    <button class="lang-btn" onclick="setLang('en')">EN</button>
+                    <button class="lang-btn" onclick="setLang('pl')">PL</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="kanban-section">
+        <div class="container">
+            <h2 class="section-title" data-lang-content="ru">Knowledge Base</h2>
+            <h2 class="section-title" data-lang-content="en">Knowledge Base</h2>
+            <h2 class="section-title" data-lang-content="pl">Baza Wiedzy</h2>
+            
+            <p class="subtitle" style="color: #888; margin-bottom: 40px; font-size: 1.1rem;" data-lang-content="ru">Актуальные заметки и роадмап статей.</p>
+            <p class="subtitle" style="color: #888; margin-bottom: 40px; font-size: 1.1rem;" data-lang-content="en">Latest notes and article roadmap.</p>
+            <p class="subtitle" style="color: #888; margin-bottom: 40px; font-size: 1.1rem;" data-lang-content="pl">Najnowsze notatki i mapa drogowa artykułów.</p>
+
+            <div class="kanban-board">
+                
+                <div class="kanban-col">
+                    <div class="kanban-header">
+                        <span>Basic</span><span class="count">5</span>
+                    </div>
+                    
+                    <div class="article-card new">
+                        <span class="article-tag">Metrics</span>
+                        <div class="article-title" data-lang-content="ru">ROAS vs CPA: Битва метрик</div>
+                        <div class="article-title" data-lang-content="en">ROAS vs CPA: The Metrics Battle</div>
+                        <div class="article-title" data-lang-content="pl">ROAS vs CPA: Bitwa Metryk</div>
+                        <div class="article-meta"><span>Read</span><span>3 min</span></div>
+                    </div>
+
+                    <div class="article-card">
+                        <span class="article-tag">Dev</span>
+                        <div class="article-title" data-lang-content="ru">Приложения в 2025: Зачем и для кого?</div>
+                        <div class="article-title" data-lang-content="en">Mobile Apps in 2025: Why Bother?</div>
+                        <div class="article-title" data-lang-content="pl">Aplikacje w 2025: Po Co?</div>
+                        <div class="article-meta"><span>Draft</span><span>-</span></div>
+                    </div>
+
+                    <div class="article-card">
+                        <span class="article-tag">Strategy</span>
+                        <div class="article-title" data-lang-content="ru">Поиск ниши с реальной выручкой</div>
+                        <div class="article-title" data-lang-content="en">Finding a Niche with Real Revenue</div>
+                        <div class="article-title" data-lang-content="pl">Szukanie Niszy z Przychodem</div>
+                        <div class="article-meta"><span>Concept</span><span>-</span></div>
+                    </div>
+
+                    <div class="article-card">
+                        <span class="article-tag">Product</span>
+                        <div class="article-title" data-lang-content="ru">Воронка vs UA Скиллы</div>
+                        <div class="article-title" data-lang-content="en">Funnel vs UA Skills</div>
+                        <div class="article-title" data-lang-content="pl">Lejek vs Umiejętności UA</div>
+                         <div class="article-meta"><span>Draft</span><span>-</span></div>
+                    </div>
+
+                    <div class="article-card">
+                        <span class="article-tag">Buying</span>
+                        <div class="article-title" data-lang-content="ru">Что обычно не так с закупкой?</div>
+                        <div class="article-title" data-lang-content="en">What's Usually Wrong with Buying?</div>
+                        <div class="article-title" data-lang-content="pl">Co Zwykle Jest Nie Tak z Zakupem?</div>
+                         <div class="article-meta"><span>Guide</span><span>5 min</span></div>
+                    </div>
+                </div>
+
+                <div class="kanban-col">
+                    <div class="kanban-header">
+                        <span>Advanced</span><span class="count">6</span>
+                    </div>
+
+                    <div class="article-card new">
+                        <span class="article-tag">Facebook</span>
+                        <div class="article-title">Andromeda FB Strategy</div>
+                        <div class="article-meta"><span>New</span><span>PRO</span></div>
+                    </div>
+
+                    <div class="article-card">
+                        <span class="article-tag">Tech</span>
+                        <div class="article-title">Facebook AEM (Event Measurement)</div>
+                        <div class="article-meta"><span>Tech</span><span>Hard</span></div>
+                    </div>
+
+                    <div class="article-card">
+                        <span class="article-tag">Funnel</span>
+                        <div class="article-title" data-lang-content="ru">CPP для построения воронок</div>
+                        <div class="article-title" data-lang-content="en">CPP for Funnel Building</div>
+                        <div class="article-title" data-lang-content="pl">CPP do Budowania Lejków</div>
+                        <div class="article-meta"><span>iOS</span><span>5 min</span></div>
+                    </div>
+
+                    <div class="article-card new">
+                        <span class="article-tag">Optimization</span>
+                        <div class="article-title" data-lang-content="ru">Радикальное снижение CPA</div>
+                        <div class="article-title" data-lang-content="en">Radical CPA Reduction</div>
+                        <div class="article-title" data-lang-content="pl">Radykalna Redukcja CPA</div>
+                        <div class="article-meta"><span>Case</span><span>7 min</span></div>
+                    </div>
+
+                    <div class="article-card">
+                        <span class="article-tag">Flows</span>
+                        <div class="article-title">W2A / W2W / A2A Patterns</div>
+                        <div class="article-meta"><span>System</span><span>-</span></div>
+                    </div>
+
+                    <div class="article-card">
+                        <span class="article-tag">Creative</span>
+                        <div class="article-title" data-lang-content="ru">Делай креативы как художник</div>
+                        <div class="article-title" data-lang-content="en">Create Ads Like an Artist</div>
+                        <div class="article-title" data-lang-content="pl">Twórz Reklamy jak Artysta</div>
+                        <div class="article-meta"><span>Vision</span><span>-</span></div>
+                    </div>
+                </div>
+
+                <div class="kanban-col">
+                    <div class="kanban-header">
+                        <span>Team Building</span><span class="count">4</span>
+                    </div>
+
+                    <div class="article-card">
+                        <span class="article-tag">Growth</span>
+                        <div class="article-title" data-lang-content="ru">Система Менторинга</div>
+                        <div class="article-title" data-lang-content="en">Mentorship System</div>
+                        <div class="article-title" data-lang-content="pl">System Mentoringu</div>
+                         <div class="article-meta"><span>Mgmt</span><span>-</span></div>
+                    </div>
+
+                    <div class="article-card new">
+                        <span class="article-tag">Production</span>
+                        <div class="article-title" data-lang-content="ru">Построение Motion-команды</div>
+                        <div class="article-title" data-lang-content="en">Building a Motion Team</div>
+                        <div class="article-title" data-lang-content="pl">Budowanie Zespołu Motion</div>
+                         <div class="article-meta"><span>Process</span><span>10 min</span></div>
+                    </div>
+
+                    <div class="article-card">
+                        <span class="article-tag">Hiring</span>
+                        <div class="article-title" data-lang-content="ru">Найм UAM (для не-экспертов)</div>
+                        <div class="article-title" data-lang-content="en">Hiring UAM (Non-Expert Guide)</div>
+                        <div class="article-title" data-lang-content="pl">Zatrudnianie UAM (Dla Niefachowców)</div>
+                         <div class="article-meta"><span>HR</span><span>-</span></div>
+                    </div>
+
+                    <div class="article-card">
+                        <span class="article-tag">Hiring</span>
+                        <div class="article-title" data-lang-content="ru">Найм UAM (для экспертов)</div>
+                        <div class="article-title" data-lang-content="en">Hiring UAM (Expert Guide)</div>
+                        <div class="article-title" data-lang-content="pl">Zatrudnianie UAM (Eksperci)</div>
+                         <div class="article-meta"><span>HR</span><span>-</span></div>
+                    </div>
+                </div>
+
+                <div class="kanban-col">
+                    <div class="kanban-header">
+                        <span>Career / UA</span><span class="count">1</span>
+                    </div>
+                    <div class="article-card new">
+                        <span class="article-tag">Vision</span>
+                        <div class="article-title" data-lang-content="ru">Сильная команда — кто это?</div>
+                        <div class="article-title" data-lang-content="en">What is a Strong Team?</div>
+                        <div class="article-title" data-lang-content="pl">Silny Zespół — Czyli Kto?</div>
+                        <div class="article-meta"><span>Essay</span><span>4 min</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <h2 style="margin-bottom: 20px;" data-lang-content="ru">Есть вопросы?</h2>
+        <h2 style="margin-bottom: 20px;" data-lang-content="en">Questions?</h2>
+        <h2 style="margin-bottom: 20px;" data-lang-content="pl">Pytania?</h2>
+        
+        <a href="mailto:vlad.yasinski@roimobi.com" class="cta-btn">vlad.yasinski@roimobi.com</a>
+        
+        <div class="contacts mono">
+            <a href="https://t.me/ua5er" target="_blank">Telegram</a>
+            <a href="https://www.linkedin.com/in/vlad-yasinski-98085192" target="_blank">LinkedIn</a>
+            <a href="#">Upwork</a>
+        </div>
+        
+        <div class="legal-info">
+            <p style="margin-top: 50px;">© 2024 ROIMOBI. All rights reserved.</p>
+            <p style="margin-top: 10px; color: #555;">NIP 5273049048</p>
+        </div>
+    </footer>
+
+    <script>
+        function setLang(lang) {
+            document.body.className = 'lang-' + lang;
+            localStorage.setItem('selectedLang', lang); 
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const textMap = {'ru': 'RU', 'en': 'EN', 'pl': 'PL'};
+            Array.from(document.querySelectorAll('.lang-btn')).find(el => el.textContent === textMap[lang]).classList.add('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('selectedLang') || 'ru';
+            setLang(savedLang);
+        });
+    </script>
+</body>
+</html>
