@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROIMOBI | Vlad Yasinski - UA Expert</title>
+    <title>ROIMOBI | Vlad Yasinski</title>
     <style>
-        /* --- RESET & BASE STYLES --- */
+        /* --- BASE VARIABLERS --- */
         :root {
-            --bg-color: #0a0a0a;
-            --card-bg: #141414;
+            --bg-color: #050505;
+            --card-bg: rgba(20, 20, 20, 0.6);
             --text-main: #ffffff;
             --text-muted: #888888;
-            --accent: #00FF94; /* Profit Green */
-            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --font-mono: "Courier New", Courier, monospace;
+            --accent: #00FF94;
+            --accent-dim: rgba(0, 255, 148, 0.1);
+            --font-main: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: "JetBrains Mono", "Courier New", monospace;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,274 +26,403 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
-        }
-
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
-        ul { list-style: none; }
-        img { max-width: 100%; display: block; }
-
-        /* --- UTILITIES --- */
-        .container {
-            max-width: 1150px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .highlight { color: var(--accent); }
-        .mono { font-family: var(--font-mono); font-size: 0.9em; letter-spacing: -0.5px; }
-        .section-title {
-            font-size: 2rem;
-            margin-bottom: 50px;
-            border-left: 3px solid var(--accent);
-            padding-left: 20px;
-        }
-
-        /* --- HEADER --- */
-        header {
-            padding: 30px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .logo {
-            font-weight: 700;
-            font-size: 1.2rem;
-            letter-spacing: -1px;
-        }
-
-        nav a {
-            margin-left: 30px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-        nav a:hover { color: var(--accent); }
-
-        /* --- HERO SECTION (SPLIT) --- */
-        .hero {
-            padding: 80px 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 60px;
-        }
-
-        .hero-text {
-            flex: 1;
-        }
-
-        .hero-image {
-            flex: 0 0 320px; /* Фиксированная ширина контейнера фото */
+            /* --- BACKGROUND GRID EFFECT --- */
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
             position: relative;
         }
 
-        /* Стилизация фото */
-        .hero-image img {
+        /* --- AMBIENT GLOW --- */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -20%;
+            left: -20%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        img { max-width: 100%; display: block; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 2; }
+        .highlight { color: var(--accent); text-shadow: 0 0 15px rgba(0, 255, 148, 0.4); }
+        .mono { font-family: var(--font-mono); font-size: 0.85em; letter-spacing: -0.5px; }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 50px;
+            font-weight: 800;
+            display: inline-block;
+            background: linear-gradient(90deg, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- LOGIC: LANGUAGE SWITCHING --- */
+        [data-lang-content] { display: none; }
+        body.lang-ru [data-lang-content="ru"] { display: block; }
+        body.lang-ru span[data-lang-content="ru"] { display: inline; }
+        body.lang-en [data-lang-content="en"] { display: block; }
+        body.lang-en span[data-lang-content="en"] { display: inline; }
+        body.lang-pl [data-lang-content="pl"] { display: block; }
+        body.lang-pl span[data-lang-content="pl"] { display: inline; }
+
+        /* --- HEADER (FIXED & CLEAN) --- */
+        header {
+            height: 90px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Centers items vertically */
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo a { font-weight: 800; font-size: 1.3rem; letter-spacing: -1px; text-transform: uppercase; }
+        
+        /* Container for Nav + Lang */
+        .header-right { 
+            display: flex; 
+            align-items: center; /* Ensures they are on the same line */
+        }
+
+        nav { 
+            display: flex; 
+            gap: 30px; 
+        }
+
+        nav a { 
+            font-size: 0.85rem; 
+            color: var(--text-muted); 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+        nav a:hover, nav a.active { color: var(--text-main); text-shadow: 0 0 8px rgba(255,255,255,0.3); }
+
+        .lang-switcher { 
+            display: flex; 
+            gap: 15px; 
+            margin-left: 40px; /* Space from nav */
+            padding-left: 40px; /* Space for separator */
+            border-left: 1px solid #333; /* Clean separator line */
+            height: 30px; /* Height for separator */
+            align-items: center;
+        }
+
+        .lang-btn { 
+            background: none; 
+            border: none; /* REMOVED BORDERS */
+            color: #444; 
+            font-size: 0.85rem; 
+            cursor: pointer; 
+            font-family: var(--font-mono); 
+            font-weight: 700; 
+            padding: 0;
+            transition: 0.3s; 
+        }
+        .lang-btn:hover { color: #888; }
+        .lang-btn.active { color: var(--accent); text-shadow: 0 0 10px var(--accent-dim); }
+
+        /* --- TICKER TAPE --- */
+        .ticker-wrap {
             width: 100%;
-            height: 420px; /* Высота прямоугольника */
-            object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid #333;
-            /* Легкое свечение */
-            box-shadow: 0 20px 50px rgba(0, 255, 148, 0.05); 
-            filter: grayscale(20%); /* Чуть приглушим цвета для стиля */
+            overflow: hidden;
+            background: #0f0f0f;
+            border-bottom: 1px solid #222;
+            padding: 10px 0;
+            position: relative;
+            z-index: 90;
+        }
+        .ticker {
+            display: flex;
+            white-space: nowrap;
+            animation: ticker 60s linear infinite; 
+        }
+        .ticker-item {
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            margin-right: 60px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+        .ticker-item span { color: var(--accent); margin-left: 8px; font-weight: 700; text-shadow: 0 0 10px rgba(0,255,148,0.3); }
+        
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* --- HERO --- */
+        .hero { 
+            padding: 60px 0 100px;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 60px; 
+        }
+        .hero-text { flex: 1; }
+        
+        .hero-image { 
+            flex: 0 0 340px; 
+            position: relative; 
+        }
+        
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            background: var(--accent);
+            filter: blur(60px);
+            opacity: 0.15;
+            z-index: -1;
             transition: 0.5s;
         }
         
-        .hero-image img:hover {
-            filter: grayscale(0%);
-            border-color: var(--accent);
+        .hero-image img {
+            width: 100%;
+            height: 440px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            filter: grayscale(100%) contrast(1.1);
+            transition: 0.5s;
         }
-
-        h1 {
-            font-size: 3.8rem;
-            line-height: 1.05;
-            font-weight: 800;
-            margin-bottom: 25px;
-            letter-spacing: -2px;
+        
+        .hero-image:hover img { 
+            filter: grayscale(0%); 
+            border-color: var(--accent); 
+            transform: scale(1.02);
         }
+        .hero-image:hover::before { opacity: 0.3; }
 
-        .subtitle {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            max-width: 550px;
-            margin-bottom: 40px;
-        }
-
+        h1 { font-size: 4rem; line-height: 1.05; font-weight: 800; margin-bottom: 25px; letter-spacing: -2px; }
+        .subtitle { font-size: 1.2rem; color: var(--text-muted); max-width: 550px; margin-bottom: 40px; }
+        
         .status-badge {
-            display: inline-block;
-            border: 1px solid var(--accent);
+            display: inline-block; 
+            border: 1px solid var(--accent); 
+            background: var(--accent-dim);
             color: var(--accent);
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            padding: 6px 14px; border-radius: 4px;
+            font-size: 0.75rem; margin-bottom: 25px; 
+            text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* --- APPROACH SECTION --- */
-        .approach {
-            padding: 60px 0 100px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-            border-bottom: 1px solid #1a1a1a;
+        /* --- CARDS --- */
+        .approach { padding: 0 0 100px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .approach-item {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            transition: 0.3s;
         }
-
+        .approach-item:hover {
+            border-color: var(--accent);
+            background: rgba(20, 20, 20, 0.9);
+            transform: translateY(-5px);
+        }
         .approach-item h3 { margin-bottom: 15px; font-size: 1.1rem; color: #fff; }
         .approach-item p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
 
-        /* --- SERVICES SECTION --- */
-        .services-section {
-            padding: 100px 0;
-            background-color: #0d0d0d;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
+        .services-section { padding: 100px 0; background-color: transparent; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .service-card {
             background: var(--card-bg);
+            backdrop-filter: blur(10px);
             padding: 35px;
-            border: 1px solid #222;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
             transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
         }
-
         .service-card:hover {
             border-color: var(--accent);
-            background: #161616;
             transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
+        .service-num { color: var(--accent); font-size: 0.85rem; margin-bottom: 20px; opacity: 0.8; }
+        .service-title { font-size: 1.3rem; margin-bottom: 15px; font-weight: 700; line-height: 1.2; }
+        .service-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
 
-        .service-num {
-            color: var(--accent);
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            display: block;
-            opacity: 0.8;
-        }
-
-        .service-title {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-            line-height: 1.2;
-        }
-
-        .service-desc {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        /* --- CASES SECTION --- */
-        .cases-section {
-            padding: 100px 0;
-        }
-
-        .cases-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 30px;
-        }
-
+        .cases-section { padding: 100px 0; }
+        .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px; }
         .case-card {
-            background: var(--card-bg);
-            padding: 30px;
-            border: 1px solid #222;
-            transition: transform 0.2s, border-color 0.2s;
+            background: var(--card-bg); 
+            padding: 30px; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px;
+            transition: 0.3s;
+            backdrop-filter: blur(10px); /* Добавлен блюр для соответствия стилю */
         }
-
-        .case-card:hover {
-            border-color: var(--accent);
-        }
-
-        .case-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 15px;
-        }
-
+        .case-card:hover { border-color: var(--accent); transform: scale(1.02); }
+        .case-header { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
         .app-name { font-weight: 700; }
         .app-cat { color: var(--text-muted); font-size: 0.85rem; }
-
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .kpi-item span { display: block; }
+        .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .kpi-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
-        .kpi-value { font-size: 1.5rem; font-weight: 700; color: var(--text-main); font-family: var(--font-mono); }
-        .kpi-value.green { color: var(--accent); }
-
+        .kpi-value { 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            color: var(--text-main); 
+            font-family: var(--font-mono); 
+            margin-left: 10px; /* Добавлен отступ слева, как просили */
+        }
+        .kpi-value.green { color: var(--accent); text-shadow: 0 0 10px rgba(0, 255, 148, 0.3); }
         .case-desc { font-size: 0.9rem; color: #aaa; line-height: 1.5; }
 
-        /* --- FOOTER --- */
-        footer {
-            padding: 80px 0;
-            border-top: 1px solid #222;
-            text-align: center;
-        }
-
+        footer { padding: 80px 0; border-top: 1px solid #222; text-align: center; }
         .cta-btn {
-            display: inline-block;
-            background: var(--text-main);
-            color: var(--bg-color);
-            padding: 18px 45px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            border-radius: 4px;
-            margin-bottom: 40px;
+            display: inline-block; background: var(--text-main); color: #000;
+            padding: 18px 45px; font-weight: 800; font-size: 1.1rem; border-radius: 4px; margin-bottom: 40px;
+            transition: 0.3s;
         }
-        .cta-btn:hover { background: var(--accent); }
-
+        .cta-btn:hover { background: var(--accent); box-shadow: 0 0 20px var(--accent-dim); transform: translateY(-2px); }
         .contacts a { margin: 0 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
-        .contacts a:hover { color: var(--text-main); }
+        .contacts a:hover { color: var(--text-main); text-shadow: 0 0 5px #fff; }
+        .legal-info { margin-top: 30px; font-size: 0.75rem; color: #333; font-family: var(--font-mono); }
 
-        /* --- RESPONSIVE --- */
         @media (max-width: 900px) {
             .hero { flex-direction: column-reverse; text-align: center; gap: 40px; padding: 50px 0; }
             .hero-image { flex: 0 0 auto; width: 280px; }
             .hero-image img { height: 380px; }
-            .approach { grid-template-columns: 1fr; text-align: center; gap: 30px; }
+            .approach { grid-template-columns: 1fr; text-align: center; gap: 20px; }
             h1 { font-size: 2.8rem; }
-            nav { display: none; } /* Для простоты на мобильном скрываем меню, можно заменить на бургер */
+            nav { display: none; }
+            .header-right { gap: 0; }
+            .lang-switcher { margin-left: auto; padding-left: 0; border-left: none; }
+            .ticker-item { font-size: 0.7rem; }
+            .ticker { animation: ticker 40s linear infinite; }
+            .cases-grid { grid-template-columns: 1fr; } /* Кейсы в одну колонку на мобильных */
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="lang-ru">
+
+    <header>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div class="logo mono">
+                <a href="index.html">ROIMOBI<span class="highlight">.COM</span></a>
+            </div>
+            
+            <div class="header-right">
+                <nav>
+                    <a href="#approach" data-lang-content="ru">Подход</a>
+                    <a href="#approach" data-lang-content="en">Approach</a>
+                    <a href="#approach" data-lang-content="pl">Podejście</a>
+
+                    <a href="#services" data-lang-content="ru">Услуги</a>
+                    <a href="#services" data-lang-content="en">Services</a>
+                    <a href="#services" data-lang-content="pl">Usługi</a>
+                    
+                    <a href="blog.html" data-lang-content="ru">Статьи</a>
+                    <a href="blog.html" data-lang-content="en">Blog</a>
+                    <a href="blog.html" data-lang-content="pl">Blog</a>
+
+                    <a href="#cases" data-lang-content="ru">Кейсы</a>
+                    <a href="#cases" data-lang-content="en">Cases</a>
+                    <a href="#cases" data-lang-content="pl">Case'y</a>
+                </nav>
+
+                <div class="lang-switcher">
+                    <button class="lang-btn" onclick="setLang('ru')">RU</button>
+                    <button class="lang-btn" onclick="setLang('en')">EN</button>
+                    <button class="lang-btn" onclick="setLang('pl')">PL</button>
+                </div>
+            </div>
+        </div>
+        <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Vlad Yasinski",
+  "url": "https://roimobi.com",
+  "jobTitle": "User Acquisition Specialist",
+  "description": "Senior Mobile User Acquisition Manager specializing in ROAS-based scaling, Web2App flows, and aggressive growth strategies for Tier-1 markets.",
+  "knowsAbout": [
+    "Mobile User Acquisition",
+    "Google UAC",
+    "Facebook Ads",
+    "TikTok Ads",
+    "SKAdNetwork",
+    "Mobile Attribution",
+    "Growth Marketing"
+  ],
+  "sameAs": [
+    "https://www.linkedin.com/in/vlad-yasinski-98085192",
+    "https://t.me/ua5er"
+  ],
+  "worksFor": {
+    "@type": "Organization",
+    "name": "ROIMOBI"
+  }
+}
+</script>
+    </header>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <div class="ticker-item">Top 1 US App Store <span>Track Record</span></div>
+            <div class="ticker-item">ROAS-Based <span>Optimization</span></div>
+            <div class="ticker-item">Web2App / App2App <span>Flows</span></div>
+            <div class="ticker-item">Creative Production <span>System</span></div>
+            <div class="ticker-item">Marketing Team <span>Building</span></div>
+            <div class="ticker-item">Gen Z <span>Acquisition</span></div>
+            <div class="ticker-item">3rd Party <span>Integrations</span></div>
+            <div class="ticker-item">Portfolio <span>Optimizing</span></div>
+            <div class="ticker-item">Market Analysis <span>& Strategy</span></div>
+            <div class="ticker-item">P&L <span>Management</span></div>
+            <div class="ticker-item">Funnel <span>Creating</span></div>
+            <div class="ticker-item">Full-Cycle <span>UA</span></div>
+
+            <div class="ticker-item">Top 1 US App Store <span>Track Record</span></div>
+            <div class="ticker-item">ROAS-Based <span>Optimization</span></div>
+            <div class="ticker-item">Web2App / App2App <span>Flows</span></div>
+            <div class="ticker-item">Creative Production <span>System</span></div>
+            <div class="ticker-item">Marketing Team <span>Building</span></div>
+            <div class="ticker-item">Gen Z <span>Acquisition</span></div>
+            <div class="ticker-item">3rd Party <span>Integrations</span></div>
+            <div class="ticker-item">Portfolio <span>Optimizing</span></div>
+            <div class="ticker-item">Market Analysis <span>& Strategy</span></div>
+            <div class="ticker-item">P&L <span>Management</span></div>
+            <div class="ticker-item">Funnel <span>Creating</span></div>
+            <div class="ticker-item">Full-Cycle <span>UA</span></div>
+        </div>
+    </div>
 
     <div class="container">
-        <header>
-            <div class="logo mono">ROIMOBI<span class="highlight">.COM</span></div>
-            <nav>
-                <a href="#approach">Подход</a>
-                <a href="#services">Услуги</a>
-                <a href="#cases">Кейсы</a>
-                <a href="#contact">Контакты</a>
-            </nav>
-        </header>
-
         <section class="hero">
             <div class="hero-text">
                 <div class="status-badge mono">User Acquisition Specialist</div>
-                <h1>Data-Driven<br>Mobile Growth.</h1>
-                <p class="subtitle">
+                
+                <h1 data-lang-content="ru">Data-Driven<br>Mobile Growth.</h1>
+                <h1 data-lang-content="en">Data-Driven<br>Mobile Growth.</h1>
+                <h1 data-lang-content="pl">Data-Driven<br>Mobile Growth.</h1>
+
+                <p class="subtitle" data-lang-content="ru">
                     Я не фокусируюсь на дешевых инсталлах. <br>
                     Я масштабирую приложения, ориентируясь на <span class="highlight">ROAS</span> и <span class="highlight">LTV</span>.
+                </p>
+                <p class="subtitle" data-lang-content="en">
+                    I don't focus on cheap installs. <br>
+                    I scale apps focusing on <span class="highlight">ROAS</span> и <span class="highlight">LTV</span>.
+                </p>
+                <p class="subtitle" data-lang-content="pl">
+                    Nie skupiam się na tanich instalacjach. <br>
+                    Skaluję aplikacje koncentrując się na <span class="highlight">ROAS</span> i <span class="highlight">LTV</span>.
                 </p>
             </div>
             
@@ -300,79 +430,77 @@
                 <img src="top_best_user_acquisition_manager_vlad_yasinski.jpeg" alt="Vlad Yasinski UA Manager">
             </div>
         </section>
+    </div>
 
+    <div class="container">
         <section id="approach" class="approach">
             <div class="approach-item">
-                <h3 class="mono">[01] Аналитика</h3>
-                <p>Настройка MMP, постбэков и предиктивных моделей. Если мы не можем это измерить, мы не можем это масштабировать.</p>
+                <h3 class="mono">[01] Analytics</h3>
+                <p data-lang-content="ru">Настройка MMP, постбэков и предиктивных моделей. Если мы не можем это измерить, мы не можем это масштабировать.</p>
+                <p data-lang-content="en">Setup of MMP, postbacks, and predictive models. If we can't measure it, we can't scale it.</p>
+                <p data-lang-content="pl">Konfiguracja MMP, postbacków i modeli predykcyjnych. Jeśli nie możemy tego zmierzyć, nie możemy tego skalować.</p>
             </div>
             <div class="approach-item">
-                <h3 class="mono">[02] Креативы</h3>
-                <p>Генерация гипотез и A/B тесты. Поиск "Winning Creatives", которые пробивают баннерную слепоту и держат CPI.</p>
+                <h3 class="mono">[02] Creatives</h3>
+                <p data-lang-content="ru">Генерация гипотез и A/B тесты. Поиск "Winning Creatives", которые пробивают баннерную слепоту и держат CPI.</p>
+                <p data-lang-content="en">Hypothesis generation and A/B testing. Finding "Winning Creatives" that break banner blindness and maintain CPI.</p>
+                <p data-lang-content="pl">Generowanie hipotez i testy A/B. Znajdowanie "Winning Creatives", które przebijają ślepotę banerową i utrzymują CPI.</p>
             </div>
             <div class="approach-item">
-                <h3 class="mono">[03] Масштаб</h3>
-                <p>Работа с Tier-1 источниками (FB, Google, TikTok, Unity). Агрессивное масштабирование при сохранении целевого ROAS.</p>
+                <h3 class="mono">[03] Scale</h3>
+                <p data-lang-content="ru">Работа с Tier-1 источниками (FB, Google, TikTok, Unity). Агрессивное масштабирование при сохранении целевого ROAS.</p>
+                <p data-lang-content="en">Working with Tier-1 sources (FB, Google, TikTok, Unity). Aggressive scaling while maintaining target ROAS.</p>
+                <p data-lang-content="pl">Praca ze źródłami Tier-1 (FB, Google, TikTok, Unity). Agresywne skalowanie przy zachowaniu docelowego ROAS.</p>
             </div>
         </section>
 
         <section id="services" class="services-section">
-            <h2 class="section-title">Моя экспертиза</h2>
+            <h2 class="section-title" data-lang-content="ru">Моя экспертиза</h2>
+            <h2 class="section-title" data-lang-content="en">My Expertise</h2>
+            <h2 class="section-title" data-lang-content="pl">Moja Ekspertyza</h2>
             
             <div class="services-grid">
                 <div class="service-card">
-                    <span class="service-num mono">[01] UA Audit & Strategy</span>
-                    <h3 class="service-title">Аудит и Стратегия<br>Роста</h3>
-                    <p class="service-desc">
-                        Комплексный "health check" текущих кампаний. Выявление утечек бюджета. Разработка go-to-market стратегии с медиапланом и прогнозом окупаемости.
-                    </p>
+                    <span class="service-num mono">[01] Strategy</span>
+                    <h3 class="service-title" data-lang-content="ru">Аудит и Стратегия</h3>
+                    <h3 class="service-title" data-lang-content="en">Audit & Strategy</h3>
+                    <h3 class="service-title" data-lang-content="pl">Audyt i Strategia</h3>
+                    <p class="service-desc" data-lang-content="ru">Комплексный "health check" кампаний. Go-to-market стратегия с медиапланом.</p>
+                    <p class="service-desc" data-lang-content="en">Complex health check. Go-to-market strategy with media planning.</p>
+                    <p class="service-desc" data-lang-content="pl">Kompleksowy "health check". Strategia go-to-market z mediaplanem.</p>
                 </div>
-
                 <div class="service-card">
-                    <span class="service-num mono">[02] Analytics Stack</span>
-                    <h3 class="service-title">Построение Систем<br>Аналитики</h3>
-                    <p class="service-desc">
-                        Интеграция MMP (AppsFlyer/Adjust), валидация ивентов, настройка SKAN-конверсий и дашбордов для отслеживания реального LTV.
-                    </p>
+                    <span class="service-num mono">[02] Analytics</span>
+                    <h3 class="service-title" data-lang-content="ru">Построение Аналитики</h3>
+                    <h3 class="service-title" data-lang-content="en">Analytics Setup</h3>
+                    <h3 class="service-title" data-lang-content="pl">Budowa Analityki</h3>
+                    <p class="service-desc" data-lang-content="ru">Интеграция MMP (AppsFlyer/Adjust), SKAN, кастомные дашборды LTV.</p>
+                    <p class="service-desc" data-lang-content="en">MMP integration (AppsFlyer/Adjust), SKAN, custom LTV dashboards.</p>
+                    <p class="service-desc" data-lang-content="pl">Integracja MMP (AppsFlyer/Adjust), SKAN, niestandardowe dashboardy LTV.</p>
                 </div>
-
-                 <div class="service-card">
-                    <span class="service-num mono">[03] Media Buying System</span>
-                    <h3 class="service-title">Построение Системной<br>Закупки</h3>
-                    <p class="service-desc">
-                        Настройка структуры аккаунтов в Tier-1 источниках (FB, UAC, TikTok, Unity). Внедрение правил биддинга и автоматизации отчетности.
-                    </p>
+                <div class="service-card">
+                    <span class="service-num mono">[03] Buying System</span>
+                    <h3 class="service-title" data-lang-content="ru">Системная Закупка</h3>
+                    <h3 class="service-title" data-lang-content="en">Media Buying System</h3>
+                    <h3 class="service-title" data-lang-content="pl">System Zakupu Mediów</h3>
+                    <p class="service-desc" data-lang-content="ru">Настройка структуры аккаунтов, правил биддинга и автоматизации.</p>
+                    <p class="service-desc" data-lang-content="en">Account structure setup, bidding rules, and automation.</p>
+                    <p class="service-desc" data-lang-content="pl">Konfiguracja struktury kont, reguł licytacji i automatyzacji.</p>
                 </div>
-
                 <div class="service-card">
                     <span class="service-num mono">[04] Creative Ops</span>
-                    <h3 class="service-title">Отдел Креативного<br>Продакшна</h3>
-                    <p class="service-desc">
-                        Организация "креативной фабрики". Найм дизайнеров, внедрение процессов генерации гипотез и пайплайна еженедельных тестов.
-                    </p>
-                </div>
-                
-                <div class="service-card">
-                    <span class="service-num mono">[05] Advisory</span>
-                    <h3 class="service-title">Стратегический<br>Консалтинг</h3>
-                    <p class="service-desc">
-                        Сопровождение для фаундеров и CMO. Второе мнение по вопросам масштабирования, выхода на новые гео и монетизации.
-                    </p>
-                </div>
-
-                 <div class="service-card">
-                    <span class="service-num mono">[06] Mentorship</span>
-                    <h3 class="service-title">Обучение<br>Команды</h3>
-                    <p class="service-desc">
-                        Обучение инхаус-отдела современным подходам к анализу данных, работе с креативами и управлению бюджетами.
-                    </p>
+                    <h3 class="service-title" data-lang-content="ru">Креативный Отдел</h3>
+                    <h3 class="service-title" data-lang-content="en">Creative Production</h3>
+                    <h3 class="service-title" data-lang-content="pl">Dział Kreatywny</h3>
+                    <p class="service-desc" data-lang-content="ru">Построение "фабрики креативов": процессы, гипотезы, тесты.</p>
+                    <p class="service-desc" data-lang-content="en">Building a "creative factory": processes, hypotheses, tests.</p>
+                    <p class="service-desc" data-lang-content="pl">Budowa "fabryki kreatywnej": procesy, hipotezy, testy.</p>
                 </div>
             </div>
         </section>
 
         <section id="cases" class="cases-section">
             <h2 class="section-title">Track Record</h2>
-            
             <div class="cases-grid">
                 <div class="case-card">
                     <div class="case-header">
@@ -380,73 +508,107 @@
                         <span class="app-cat mono">Utility / EU</span>
                     </div>
                     <div class="kpi-grid">
-                        <div class="kpi-item">
-                            <span class="kpi-label">Spend / mo</span>
-                            <span class="kpi-value">$50k+</span>
-                        </div>
-                        <div class="kpi-item">
-                            <span class="kpi-label">ROAS D30</span>
-                            <span class="kpi-value green">145%</span>
-                        </div>
+                        <div class="kpi-item"><span class="kpi-label">Spend / mo</span><span class="kpi-value">$50k+</span></div>
+                        <div class="kpi-item"><span class="kpi-label">ROAS D30</span><span class="kpi-value green">145%</span></div>
                     </div>
-                    <p class="case-desc">
-                        Снижение CPA на 30% за счет смены стратегии биддинга в Google UAC и внедрения UGC-креативов.
-                    </p>
+                    <p class="case-desc" data-lang-content="ru">Снижение CPA на 30% за счет смены стратегии в Google UAC.</p>
+                    <p class="case-desc" data-lang-content="en">CPA decreased by 30% via new Google UAC strategy.</p>
+                    <p class="case-desc" data-lang-content="pl">Obniżenie CPA o 30% dzięki nowej strategii Google UAC.</p>
                 </div>
 
                 <div class="case-card">
                     <div class="case-header">
-                        <span class="app-name">Idle Tycoon Game</span>
+                        <span class="app-name">Idle Tycoon</span>
                         <span class="app-cat mono">Gamedev / US</span>
                     </div>
                     <div class="kpi-grid">
-                        <div class="kpi-item">
-                            <span class="kpi-label">Installs</span>
-                            <span class="kpi-value">150k</span>
-                        </div>
-                        <div class="kpi-item">
-                            <span class="kpi-label">ROAS D7</span>
-                            <span class="kpi-value green">110%</span>
-                        </div>
+                        <div class="kpi-item"><span class="kpi-label">Installs</span><span class="kpi-value">150k</span></div>
+                        <div class="kpi-item"><span class="kpi-label">ROAS D7</span><span class="kpi-value green">110%</span></div>
                     </div>
-                    <p class="case-desc">
-                        Масштабирование через TikTok Ads. Оптимизация на Purchase Event вместо Install.
-                    </p>
+                    <p class="case-desc" data-lang-content="ru">Масштабирование через TikTok. Оптимизация на Purchase.</p>
+                    <p class="case-desc" data-lang-content="en">Scaling via TikTok. Purchase Event optimization.</p>
+                    <p class="case-desc" data-lang-content="pl">Skalowanie przez TikTok. Optymalizacja pod zakup.</p>
                 </div>
 
                 <div class="case-card">
                     <div class="case-header">
-                        <span class="app-name">Health & Fitness</span>
-                        <span class="app-cat mono">Sub / Tier-1</span>
+                        <span class="app-name">H&F App</span>
+                        <span class="app-cat mono">Health & Fitness / US</span>
                     </div>
                     <div class="kpi-grid">
-                        <div class="kpi-item">
-                            <span class="kpi-label">Trials</span>
-                            <span class="kpi-value">12k+</span>
-                        </div>
-                        <div class="kpi-item">
-                            <span class="kpi-label">CPA Trial</span>
-                            <span class="kpi-value green">-$15%</span>
-                        </div>
+                        <div class="kpi-item"><span class="kpi-label">Rank</span><span class="kpi-value green">Top 1</span></div>
+                        <div class="kpi-item"><span class="kpi-label">Spend / mo</span><span class="kpi-value">$500k+</span></div>
                     </div>
-                    <p class="case-desc">
-                        Работа с SKAdNetwork. Перестройка воронки онбординга для повышения конверсии в триал.
-                    </p>
+                    <p class="case-desc" data-lang-content="ru">Вывод приложения в Топ-1 App Store США в категории Health & Fitness. Масштабирование через FB и TikTok.</p>
+                    <p class="case-desc" data-lang-content="en">Reached Top 1 in US App Store (Health & Fitness). Scaled via FB & TikTok.</p>
+                    <p class="case-desc" data-lang-content="pl">Osiągnięto Top 1 w US App Store (Health & Fitness). Skalowanie przez FB i TikTok.</p>
                 </div>
+
+                <div class="case-card">
+                    <div class="case-header">
+                        <span class="app-name">Entertainment App</span>
+                        <span class="app-cat mono">Entertainment / US (2024)</span>
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi-item"><span class="kpi-label">Rank</span><span class="kpi-value green">Top 1</span></div>
+                        <div class="kpi-item"><span class="kpi-label">Revenue Q4 vs Q1</span><span class="kpi-value green">+30%</span></div>
+                    </div>
+                    <p class="case-desc" data-lang-content="ru">Запуск и масштабирование развлекательного приложения до Топ-1 в США в 2024 году. Рост выручки за год.</p>
+                    <p class="case-desc" data-lang-content="en">Launched and scaled an entertainment app to Top 1 US in 2024. Year-over-year revenue growth.</p>
+                    <p class="case-desc" data-lang-content="pl">Uruchomienie i skalowanie aplikacji rozrywkowej do Top 1 w USA w 2024 roku. Wzrost przychodów rok do roku.</p>
+                </div>
+
+                <div class="case-card">
+                    <div class="case-header">
+                        <span class="app-name">Portfolio Optimization</span>
+                        <span class="app-cat mono">Management / UA Team</span>
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi-item"><span class="kpi-label">Profit</span><span class="kpi-value green">Positive</span></div>
+                        <div class="kpi-item"><span class="kpi-label">Efficiency</span><span class="kpi-value green">+40%</span></div>
+                    </div>
+                    <p class="case-desc" data-lang-content="ru">Оптимизация портфеля приложений и вывод отдела закупки трафика в прибыль (P&L Positive).</p>
+                    <p class="case-desc" data-lang-content="en">Portfolio optimization and turning around the UA department to profitability (P&L Positive).</p>
+                    <p class="case-desc" data-lang-content="pl">Optymalizacja portfolio i doprowadzenie działu UA do rentowności (P&L Positive).</p>
+                </div>
+
             </div>
         </section>
 
         <footer id="contact">
-            <h2 style="margin-bottom: 20px;">Готовы к росту?</h2>
-            <a href="mailto:hello@roimobi.com" class="cta-btn">Написать на Email</a>
+            <h2 style="margin-bottom: 20px;" data-lang-content="ru">Готовы к росту?</h2>
+            <h2 style="margin-bottom: 20px;" data-lang-content="en">Ready to grow?</h2>
+            <h2 style="margin-bottom: 20px;" data-lang-content="pl">Gotowy na wzrost?</h2>
+            
+            <a href="mailto:vlad.yasinski@roimobi.com" class="cta-btn">vlad.yasinski@roimobi.com</a>
             
             <div class="contacts mono">
-             <a href="https://t.me/ua5er" target="_blank" rel="noopener">Telegram</a>
-  <a href="https://www.linkedin.com/in/vlad-yasinski-98085192?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener">LinkedIn</a>
+                <a href="https://t.me/ua5er" target="_blank">Telegram</a>
+                <a href="https://www.linkedin.com/in/vlad-yasinski-98085192" target="_blank">LinkedIn</a>
+                <a href="#">Upwork</a>
             </div>
-            <p style="margin-top: 50px; font-size: 0.8rem; color: #444;">© 2024 ROIMOBI. All rights reserved.</p>
+            
+            <div class="legal-info">
+                <p style="margin-top: 50px;">© 2024 ROIMOBI. All rights reserved.</p>
+                <p style="margin-top: 10px; color: #555;">NIP 5273049048</p>
+            </div>
         </footer>
     </div>
 
+    <script>
+        function setLang(lang) {
+            document.body.className = 'lang-' + lang;
+            localStorage.setItem('selectedLang', lang); 
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const textMap = {'ru': 'RU', 'en': 'EN', 'pl': 'PL'};
+            Array.from(document.querySelectorAll('.lang-btn')).find(el => el.textContent === textMap[lang]).classList.add('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('selectedLang') || 'ru';
+            setLang(savedLang);
+        });
+    </script>
 </body>
 </html>
