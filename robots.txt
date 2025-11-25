@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Explicitly allow AI bots (just in case)
+User-agent: GPTBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://roimobi.com/sitemap.xml
