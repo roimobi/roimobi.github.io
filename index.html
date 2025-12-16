@@ -1,643 +1,446 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROIMOBI | Vlad Yasinski</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aplexity Limited | AI iOS Development</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
     <style>
-        /* --- BASE VARIABLES --- */
+        /* --- CORE SETTINGS --- */
         :root {
-            --bg-color: #050505;
-            --card-bg: rgba(20, 20, 20, 0.6);
+            --bg-color: #050507;
             --text-main: #ffffff;
-            --text-muted: #888888;
-            --accent: #00FF94;
-            --accent-dim: rgba(0, 255, 148, 0.1);
-            --font-main: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-            --font-mono: "JetBrains Mono", "Courier New", monospace;
+            --text-muted: #86868b;
+            --accent-glow: #5e5ce6;
+            --accent-secondary: #bf5af2;
+            --accent-blue: #0a84ff;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html { scroll-behavior: smooth; }
-
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: var(--font-main);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Inter', -apple-system, sans-serif;
             overflow-x: hidden;
-            /* Grid Background */
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+            width: 100%;
+            height: 100%;
             position: relative;
         }
 
-        /* Ambient Glow */
-        body::before {
-            content: '';
+        /* --- BACKGROUND ANIMATION --- */
+        .ambient-bg {
             position: fixed;
-            top: -20%;
-            left: -20%;
-            width: 60%;
-            height: 60%;
-            background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
-            filter: blur(80px);
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: -1;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+
+        .blob-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--accent-glow);
+            top: -100px;
+            left: -100px;
+            animation-duration: 12s;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent-secondary);
+            bottom: -50px;
+            right: -100px;
+            animation-duration: 15s;
+            animation-delay: -2s;
+        }
+
+        .blob-3 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-blue);
+            top: 40%;
+            left: 40%;
+            opacity: 0.4;
+            animation-duration: 18s;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
             pointer-events: none;
         }
 
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
-        img { max-width: 100%; display: block; }
-        
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 0 20px; 
-            position: relative; 
-            z-index: 2; 
-        }
-        
-        .highlight { color: var(--accent); text-shadow: 0 0 15px rgba(0, 255, 148, 0.4); }
-        .mono { font-family: var(--font-mono); font-size: 0.85em; letter-spacing: -0.5px; }
-
-        .section-title {
-            font-size: 2.2rem;
-            margin-bottom: 50px;
-            font-weight: 800;
-            display: inline-block;
-            background: linear-gradient(90deg, #fff, #888);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* --- LOGIC: LANGUAGE SWITCHING (FIXED) --- */
-        [data-lang-content] { display: none; }
-
-        /* Block elements */
-        body.lang-ru h1[data-lang-content="ru"], body.lang-en h1[data-lang-content="en"], body.lang-pl h1[data-lang-content="pl"],
-        body.lang-ru h2[data-lang-content="ru"], body.lang-en h2[data-lang-content="en"], body.lang-pl h2[data-lang-content="pl"],
-        body.lang-ru p[data-lang-content="ru"], body.lang-en p[data-lang-content="en"], body.lang-pl p[data-lang-content="pl"],
-        body.lang-ru div[data-lang-content="ru"], body.lang-en div[data-lang-content="en"], body.lang-pl div[data-lang-content="pl"],
-        body.lang-ru a.mobile-link[data-lang-content="ru"], body.lang-en a.mobile-link[data-lang-content="en"], body.lang-pl a.mobile-link[data-lang-content="pl"] {
-            display: block;
-        }
-
-        /* Inline elements */
-        body.lang-ru span[data-lang-content="ru"],
-        body.lang-en span[data-lang-content="en"],
-        body.lang-pl span[data-lang-content="pl"] {
-            display: inline;
-        }
-
-        /* BUTTONS: Inline-block (CRITICAL FIX) */
-        body.lang-ru a.cta-btn[data-lang-content="ru"],
-        body.lang-en a.cta-btn[data-lang-content="en"],
-        body.lang-pl a.cta-btn[data-lang-content="pl"] {
-            display: inline-block;
-        }
-
-        /* --- HEADER --- */
-        header {
-            height: 90px;
+        /* --- UI CONTENT --- */
+        nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            background: rgba(5, 5, 5, 0.8);
-            backdrop-filter: blur(10px);
-            position: sticky;
+            padding: 30px 40px;
+            width: 100%;
+            position: absolute;
             top: 0;
-            z-index: 100;
+            z-index: 10;
         }
 
-        .logo a { font-weight: 800; font-size: 1.3rem; letter-spacing: -1px; text-transform: uppercase; }
-        
-        .header-right { display: flex; align-items: center; }
+        .logo img { height: 32px; filter: invert(1); }
 
-        /* Desktop Nav */
-        .desktop-nav { display: flex; gap: 30px; }
-        .desktop-nav a { 
-            font-size: 0.85rem; 
-            color: var(--text-muted); 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px; 
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-links a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.3s;
         }
-        .desktop-nav a:hover, .desktop-nav a.active { color: var(--text-main); text-shadow: 0 0 8px rgba(255,255,255,0.3); }
+        .nav-links a:hover { color: #fff; }
 
-        .lang-switcher { 
-            display: flex; 
-            gap: 15px; 
-            margin-left: 40px; 
-            padding-left: 40px; 
-            border-left: 1px solid #333; 
-            height: 30px; 
-            align-items: center;
-        }
-
-        .lang-btn { 
-            background: none; border: none; color: #444; 
-            font-size: 0.85rem; cursor: pointer; font-family: var(--font-mono); font-weight: 700; 
-            padding: 0; transition: 0.3s; 
-        }
-        .lang-btn:hover { color: #888; }
-        .lang-btn.active { color: var(--accent); text-shadow: 0 0 10px var(--accent-dim); }
-
-        /* --- MOBILE MENU STYLES --- */
-        .mobile-menu-toggle {
-            display: none;
-            background: none; border: none; cursor: pointer; padding: 10px; z-index: 101;
-        }
-        .mobile-menu-toggle span {
-            display: block; width: 25px; height: 2px; background-color: var(--text-main); margin: 5px 0; transition: 0.3s;
-        }
-        body.menu-open .mobile-menu-toggle span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-        body.menu-open .mobile-menu-toggle span:nth-child(2) { opacity: 0; }
-        body.menu-open .mobile-menu-toggle span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-
-        .mobile-menu-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(15px);
-            z-index: 100;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 40px;
-            transform: translateX(100%); transition: 0.4s ease-in-out;
-        }
-        body.menu-open .mobile-menu-overlay { transform: translateX(0); }
-        body.menu-open { overflow: hidden; }
-
-        .mobile-menu-overlay a { font-size: 1.5rem; font-weight: 800; text-transform: uppercase; color: var(--text-main); }
-        .mobile-menu-overlay a:hover { color: var(--accent); }
-
-        /* --- TICKER TAPE --- */
-        .ticker-wrap {
-            width: 100%; overflow: hidden; background: #0f0f0f;
-            border-bottom: 1px solid #222; padding: 10px 0;
-            position: relative; z-index: 90;
-        }
-        .ticker { display: flex; white-space: nowrap; animation: ticker 60s linear infinite; }
-        .ticker-item {
-            color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem;
-            margin-right: 60px; text-transform: uppercase; letter-spacing: 0.5px;
-            display: flex; align-items: center;
-        }
-        .ticker-item span { color: var(--accent); margin-left: 8px; font-weight: 700; text-shadow: 0 0 10px rgba(0,255,148,0.3); }
-        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-
-        /* --- HERO --- */
-        .hero { padding: 60px 0 100px; display: flex; align-items: center; justify-content: space-between; gap: 60px; }
-        .hero-text { flex: 1; }
-        .hero-image { flex: 0 0 340px; position: relative; }
-        .hero-image::before {
-            content: ''; position: absolute; inset: -20px; background: var(--accent);
-            filter: blur(60px); opacity: 0.15; z-index: -1; transition: 0.5s;
-        }
-        .hero-image img {
-            width: 100%; height: 440px; object-fit: cover; border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.1); filter: grayscale(100%) contrast(1.1); transition: 0.5s;
-        }
-        .hero-image:hover img { filter: grayscale(0%); border-color: var(--accent); transform: scale(1.02); }
-        .hero-image:hover::before { opacity: 0.3; }
-
-        h1 { font-size: 4rem; line-height: 1.05; font-weight: 800; margin-bottom: 25px; letter-spacing: -2px; }
-        .subtitle { font-size: 1.2rem; color: var(--text-muted); max-width: 550px; margin-bottom: 40px; }
-        .status-badge {
-            display: inline-block; border: 1px solid var(--accent); background: var(--accent-dim);
-            color: var(--accent); padding: 6px 14px; border-radius: 4px;
-            font-size: 0.75rem; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;
-        }
-
-        /* --- CARDS & SERVICES --- */
-        .approach { padding: 0 0 100px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
-        .approach-item {
-            background: var(--card-bg); backdrop-filter: blur(10px); padding: 30px;
-            border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; transition: 0.3s;
-        }
-        .approach-item:hover { border-color: var(--accent); background: rgba(20, 20, 20, 0.9); transform: translateY(-5px); }
-        .approach-item h3 { margin-bottom: 15px; font-size: 1.1rem; color: #fff; }
-        .approach-item p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
-
-        .services-section { padding: 100px 0; background-color: transparent; }
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .service-card {
-            background: var(--card-bg); backdrop-filter: blur(10px); padding: 35px;
-            border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; transition: all 0.3s ease;
-            display: flex; flex-direction: column;
-        }
-        .service-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .service-num { color: var(--accent); font-size: 0.85rem; margin-bottom: 20px; opacity: 0.8; }
-        .service-title { font-size: 1.3rem; margin-bottom: 15px; font-weight: 700; line-height: 1.2; }
-        .service-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
-
-        /* --- CASES --- */
-        .cases-section { padding: 100px 0; }
-        .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px; }
-        .case-card {
-            background: var(--card-bg); padding: 30px; border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 8px; transition: 0.3s; backdrop-filter: blur(10px);
-        }
-        .case-card:hover { border-color: var(--accent); transform: scale(1.02); }
-        .case-header { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
-        .app-name { font-weight: 700; }
-        .app-cat { color: var(--text-muted); font-size: 0.85rem; }
-        .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .kpi-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
-        .kpi-value { font-size: 1.5rem; font-weight: 700; color: var(--text-main); font-family: var(--font-mono); margin-left: 10px; }
-        .kpi-value.green { color: var(--accent); text-shadow: 0 0 10px rgba(0, 255, 148, 0.3); }
-        .case-desc { font-size: 0.9rem; color: #aaa; line-height: 1.5; }
-
-        /* --- CONSULTATION SECTION (NEW & FIXED) --- */
-        .consultation-section {
-            padding: 100px 0;
-            text-align: center;
-            background: linear-gradient(180deg, rgba(10,10,10,0) 0%, rgba(20,20,20,0.8) 100%);
-            border-top: 1px solid #1a1a1a;
+        /* Language Select Styles */
+        .lang-select-wrapper {
             position: relative;
-            overflow: hidden;
+            margin-left: 10px;
         }
-        .consultation-section::before {
-            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 600px; height: 300px; background: var(--accent); filter: blur(150px);
-            opacity: 0.08; pointer-events: none; z-index: 0;
+        
+        .lang-select {
+            appearance: none;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 6px 12px;
+            padding-right: 30px; /* место для стрелки */
+            border-radius: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            outline: none;
+            backdrop-filter: blur(10px);
         }
-        .consultation-content { position: relative; z-index: 2; }
+
+        .lang-select:hover {
+             background: rgba(255,255,255,0.15);
+        }
+
+        /* Кастомная стрелка для селекта */
+        .lang-select-wrapper::after {
+            content: '▼';
+            font-size: 8px;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.7);
+            pointer-events: none;
+        }
+        
+        .lang-select option {
+            background-color: #050507;
+            color: #fff;
+        }
+
+
+        /* --- HERO SECTION --- */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            min-height: 100svh; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            z-index: 5;
+        }
+
+        .hero-icon {
+            width: 80px;
+            margin-bottom: 40px;
+            filter: invert(1);
+            animation: hoverIcon 4s ease-in-out infinite;
+        }
+
+        @keyframes hoverIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            font-size: 80px;
+            font-weight: 800;
+            letter-spacing: -3px;
+            line-height: 1.05;
+            margin-bottom: 24px;
+            background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 640px;
+            margin-bottom: 48px;
+            line-height: 1.6;
+            font-weight: 300;
+        }
 
         /* BUTTONS */
-        .cta-btn {
-            display: inline-block; background: var(--text-main); color: #000;
-            padding: 18px 45px; font-weight: 800; font-size: 1.1rem; border-radius: 4px; margin-bottom: 40px;
-            transition: 0.3s; cursor: pointer; border: none; text-decoration: none;
+        .buttons { display: flex; justify-content: center; width: 100%; }
+
+        .btn {
+            padding: 16px 40px;
+            border-radius: 100px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
         }
-        .cta-btn.accent-btn { background: var(--accent); color: #000; }
-        .cta-btn:hover { background: var(--accent); box-shadow: 0 0 20px var(--accent-dim); transform: translateY(-2px); }
-        .cta-btn.accent-btn:hover { background: #fff; }
 
-        /* FOOTER */
-        footer { padding: 80px 0; border-top: 1px solid #222; text-align: center; }
-        .contacts a { margin: 0 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
-        .contacts a:hover { color: var(--text-main); text-shadow: 0 0 5px #fff; }
-        .legal-info { margin-top: 30px; font-size: 0.75rem; color: #333; font-family: var(--font-mono); }
+        .btn-primary {
+            background: #fff;
+            color: #000;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+        }
 
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .desktop-nav { display: none; }
-            .mobile-menu-toggle { display: block; }
-            .header-right { gap: 20px; }
-            .lang-switcher { margin-left: 0; padding-left: 20px; }
+        /* --- FOOTER --- */
+        footer {
+            position: relative;
+            z-index: 5;
+            padding: 80px 20px 40px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+            background: linear-gradient(to top, #000 0%, transparent 100%);
+        }
+
+        footer .company { color: #fff; font-weight: 600; margin-bottom: 15px; font-size: 16px; }
+        footer .contact-line { margin-bottom: 8px; }
+        footer a { color: var(--text-main); text-decoration: none; opacity: 0.8; transition: 0.3s; }
+        footer a:hover { opacity: 1; text-decoration: underline; }
+        footer address { font-style: normal; margin-top: 20px; line-height: 1.6; color: #666; }
+
+        /* --- MOBILE ADAPTIVE (FIXES) --- */
+        @media (max-width: 768px) {
+            /* На мобильном оставляем только переключатель языка в меню */
+            .nav-links a { display: none; }
+            nav { justify-content: space-between; padding: 20px; }
+
+            .hero {
+                padding: 40px 20px;
+                justify-content: center; 
+            }
+
+            .hero-icon {
+                width: 60px;
+                margin-bottom: 24px;
+            }
+
+            h1 { 
+                font-size: 42px;
+                letter-spacing: -1px; 
+                margin-bottom: 16px;
+            }
+
+            .hero p {
+                font-size: 16px;
+                line-height: 1.5;
+                margin-bottom: 32px;
+                max-width: 100%;
+            }
+
+            .buttons { width: 100%; }
+
+            .btn { 
+                width: 100%;
+                max-width: 340px;
+                padding: 16px 20px;
+                font-size: 16px;
+            }
             
-            .hero { flex-direction: column-reverse; text-align: center; gap: 40px; padding: 50px 0; }
-            .hero-image { flex: 0 0 auto; width: 280px; }
-            .hero-image img { height: 380px; }
-            .approach { grid-template-columns: 1fr; text-align: center; gap: 20px; }
-            h1 { font-size: 2.8rem; }
-            .ticker-item { font-size: 0.7rem; }
-            .ticker { animation: ticker 40s linear infinite; }
-            .cases-grid { grid-template-columns: 1fr; }
+            .blob { opacity: 0.5; filter: blur(60px); }
+            footer { padding: 40px 20px; }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body class="lang-ru">
+<body>
 
-    <header>
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <div class="logo mono">
-                <a href="index.html">ROIMOBI<span class="highlight">.COM</span></a>
-            </div>
+    <div class="ambient-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="noise-overlay"></div>
+    </div>
+
+    <nav>
+        <div class="logo">
+            <img src="aplexity_limited_logo.png" alt="Logo">
+        </div>
+        <div class="nav-links">
+            <a href="https://apps.apple.com/ro/developer/aplexity/id1810247790" target="_blank" data-i18n="nav_apps">Apps</a>
+            <a href="#contacts" data-i18n="nav_contact">Contact</a>
             
-            <div class="header-right">
-                <nav class="desktop-nav">
-                    <a href="#approach" data-lang-content="ru">Подход</a>
-                    <a href="#approach" data-lang-content="en">Approach</a>
-                    <a href="#approach" data-lang-content="pl">Podejście</a>
-
-                    <a href="#services" data-lang-content="ru">Услуги</a>
-                    <a href="#services" data-lang-content="en">Services</a>
-                    <a href="#services" data-lang-content="pl">Usługi</a>
-                    
-                    <a href="blog.html" data-lang-content="ru">Статьи</a>
-                    <a href="blog.html" data-lang-content="en">Blog</a>
-                    <a href="blog.html" data-lang-content="pl">Blog</a>
-
-                    <a href="#cases" data-lang-content="ru">Кейсы</a>
-                    <a href="#cases" data-lang-content="en">Cases</a>
-                    <a href="#cases" data-lang-content="pl">Case'y</a>
-                </nav>
-
-                <div class="lang-switcher">
-                    <button class="lang-btn" onclick="setLang('ru')">RU</button>
-                    <button class="lang-btn" onclick="setLang('en')">EN</button>
-                    <button class="lang-btn" onclick="setLang('pl')">PL</button>
-                </div>
-
-                 <button class="mobile-menu-toggle" id="mobileToggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
+            <div class="lang-select-wrapper">
+                <select id="language-selector" class="lang-select">
+                    <option value="en">EN</option>
+                    <option value="ru">RU</option>
+                    <option value="pl">PL</option>
+                </select>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <div class="mobile-menu-overlay" id="mobileMenu">
-        <a href="#approach" class="mobile-link" data-lang-content="ru">Подход</a>
-        <a href="#approach" class="mobile-link" data-lang-content="en">Approach</a>
-        <a href="#approach" class="mobile-link" data-lang-content="pl">Podejście</a>
-
-        <a href="#services" class="mobile-link" data-lang-content="ru">Услуги</a>
-        <a href="#services" class="mobile-link" data-lang-content="en">Services</a>
-        <a href="#services" class="mobile-link" data-lang-content="pl">Usługi</a>
+    <section class="hero">
+        <img src="aplexity_limited_logo.png" alt="Aplexity Icon" class="hero-icon">
         
-        <a href="blog.html" class="mobile-link" data-lang-content="ru">Статьи</a>
-        <a href="blog.html" class="mobile-link" data-lang-content="en">Blog</a>
-        <a href="blog.html" class="mobile-link" data-lang-content="pl">Blog</a>
+        <h1 data-i18n="hero_title">Native iOS.<br>Powered by AI.</h1>
+        
+        <p data-i18n="hero_text">
+            Aplexity Limited crafts next-generation mobile experiences.
+            We fuse Apple’s flawless UX with the raw power of Artificial Intelligence.
+        </p>
 
-        <a href="#cases" class="mobile-link" data-lang-content="ru">Кейсы</a>
-        <a href="#cases" class="mobile-link" data-lang-content="en">Cases</a>
-        <a href="#cases" class="mobile-link" data-lang-content="pl">Case'y</a>
-
-        <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="mobile-link highlight" style="margin-top: 20px;" data-lang-content="ru">Book A Call</a>
-        <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="mobile-link highlight" style="margin-top: 20px;" data-lang-content="en">Book A Call</a>
-        <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="mobile-link highlight" style="margin-top: 20px;" data-lang-content="pl">Book A Call</a>
-    </div>
-
-    <div class="ticker-wrap">
-        <div class="ticker">
-            <div class="ticker-item">Top 1 US App Store <span>Track Record</span></div>
-            <div class="ticker-item">ROAS-Based <span>Optimization</span></div>
-            <div class="ticker-item">Web2App / App2App <span>Flows</span></div>
-            <div class="ticker-item">Creative Production <span>System</span></div>
-            <div class="ticker-item">Marketing Team <span>Building</span></div>
-            <div class="ticker-item">Gen Z <span>Acquisition</span></div>
-            <div class="ticker-item">3rd Party <span>Integrations</span></div>
-            <div class="ticker-item">Portfolio <span>Optimizing</span></div>
-            <div class="ticker-item">Market Analysis <span>& Strategy</span></div>
-            <div class="ticker-item">P&L <span>Management</span></div>
-            <div class="ticker-item">Funnel <span>Creating</span></div>
-            <div class="ticker-item">Full-Cycle <span>UA</span></div>
-            <div class="ticker-item">Top 1 US App Store <span>Track Record</span></div>
-            <div class="ticker-item">ROAS-Based <span>Optimization</span></div>
-            <div class="ticker-item">Web2App / App2App <span>Flows</span></div>
-            <div class="ticker-item">Creative Production <span>System</span></div>
-            <div class="ticker-item">Marketing Team <span>Building</span></div>
-            <div class="ticker-item">Gen Z <span>Acquisition</span></div>
-            <div class="ticker-item">3rd Party <span>Integrations</span></div>
-            <div class="ticker-item">Portfolio <span>Optimizing</span></div>
-            <div class="ticker-item">Market Analysis <span>& Strategy</span></div>
-            <div class="ticker-item">P&L <span>Management</span></div>
-            <div class="ticker-item">Funnel <span>Creating</span></div>
-            <div class="ticker-item">Full-Cycle <span>UA</span></div>
+        <div class="buttons">
+            <a href="https://apps.apple.com/ro/developer/aplexity/id1810247790" target="_blank" class="btn btn-primary" data-i18n="hero_button">
+                View Our Products
+            </a>
         </div>
-    </div>
+    </section>
 
-    <div class="container">
-        <section class="hero">
-            <div class="hero-text">
-                <div class="status-badge mono">User Acquisition Specialist</div>
-                
-                <h1 data-lang-content="ru">Data-Driven<br>Mobile Growth.</h1>
-                <h1 data-lang-content="en">Data-Driven<br>Mobile Growth.</h1>
-                <h1 data-lang-content="pl">Data-Driven<br>Mobile Growth.</h1>
+    <footer id="contacts">
+        <div class="company" data-i18n="company_name">Aplexity Limited</div>
+        
+        <div class="contact-line">
+            <span data-i18n="email_label">Email:</span> <a href="mailto:support@aplexityai.com">support@aplexityai.com</a>
+        </div>
+        
+        <div class="contact-line">
+            <span data-i18n="phone_label">Phone:</span> <a href="tel:+85230081342">+852 3008 1342</a>
+        </div>
 
-                <p class="subtitle" data-lang-content="ru">
-                    Я не фокусируюсь на дешевых инсталлах. <br>
-                    Я масштабирую приложения, ориентируясь на <span class="highlight">ROAS</span> и <span class="highlight">LTV</span>.
-                </p>
-                <p class="subtitle" data-lang-content="en">
-                    I don't focus on cheap installs. <br>
-                    I scale apps focusing on <span class="highlight">ROAS</span> and <span class="highlight">LTV</span>.
-                </p>
-                <p class="subtitle" data-lang-content="pl">
-                    Nie skupiam się na tanich instalacjach. <br>
-                    Skaluję aplikacje koncentrując się na <span class="highlight">ROAS</span> i <span class="highlight">LTV</span>.
-                </p>
-                 
-                 <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="ru">Записаться на консультацию</a>
-                 <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="en">Book 30-min Consultation</a>
-                 <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="pl">Umów się na konsultację</a>
-            </div>
-            
-            <div class="hero-image">
-                <img src="top_best_user_acquisition_manager_vlad_yasinski.jpeg" alt="Vlad Yasinski UA Manager">
-            </div>
-        </section>
-    </div>
+        <address data-i18n="address">
+            Room 11114, 11F, 33 Lockhart Road,<br> 
+            Wanchai, Hong Kong, 999077
+        </address>
+        
+        <div style="margin-top: 40px; opacity: 0.3; font-size: 12px;" data-i18n="rights">
+            © 2025 Aplexity Limited. All rights reserved.
+        </div>
+    </footer>
 
-    <div class="container">
-        <section id="approach" class="approach">
-            <div class="approach-item">
-                <h3 class="mono">[01] Analytics</h3>
-                <p data-lang-content="ru">Настройка MMP, постбэков и предиктивных моделей. Если мы не можем это измерить, мы не можем это масштабировать.</p>
-                <p data-lang-content="en">Setup of MMP, postbacks, and predictive models. If we can't measure it, we can't scale it.</p>
-                <p data-lang-content="pl">Konfiguracja MMP, postbacków i modeli predykcyjnych. Jeśli nie możemy tego zmierzyć, nie możemy tego skalować.</p>
-            </div>
-            <div class="approach-item">
-                <h3 class="mono">[02] Creatives</h3>
-                <p data-lang-content="ru">Генерация гипотез и A/B тесты. Поиск "Winning Creatives", которые пробивают баннерную слепоту и держат CPI.</p>
-                <p data-lang-content="en">Hypothesis generation and A/B testing. Finding "Winning Creatives" that break banner blindness and maintain CPI.</p>
-                <p data-lang-content="pl">Generowanie hipotez i testy A/B. Znajdowanie "Winning Creatives", które przebijają ślepotę banerową i utrzymują CPI.</p>
-            </div>
-            <div class="approach-item">
-                <h3 class="mono">[03] Scale</h3>
-                <p data-lang-content="ru">Работа с Tier-1 источниками (FB, Google, TikTok, Unity). Агрессивное масштабирование при сохранении целевого ROAS.</p>
-                <p data-lang-content="en">Working with Tier-1 sources (FB, Google, TikTok, Unity). Aggressive scaling while maintaining target ROAS.</p>
-                <p data-lang-content="pl">Praca ze źródłami Tier-1 (FB, Google, TikTok, Unity). Agresywne skalowanie przy zachowaniu docelowego ROAS.</p>
-            </div>
-        </section>
-
-        <section id="services" class="services-section">
-            <h2 class="section-title" data-lang-content="ru">Моя экспертиза</h2>
-            <h2 class="section-title" data-lang-content="en">My Expertise</h2>
-            <h2 class="section-title" data-lang-content="pl">Moja Ekspertyza</h2>
-            
-            <div class="services-grid">
-                <div class="service-card">
-                    <span class="service-num mono">[01] Strategy</span>
-                    <h3 class="service-title" data-lang-content="ru">Аудит и Стратегия</h3>
-                    <h3 class="service-title" data-lang-content="en">Audit & Strategy</h3>
-                    <h3 class="service-title" data-lang-content="pl">Audyt i Strategia</h3>
-                    <p class="service-desc" data-lang-content="ru">Комплексный "health check" кампаний. Go-to-market стратегия с медиапланом.</p>
-                    <p class="service-desc" data-lang-content="en">Complex health check. Go-to-market strategy with media planning.</p>
-                    <p class="service-desc" data-lang-content="pl">Kompleksowy "health check". Strategia go-to-market z mediaplanem.</p>
-                </div>
-                <div class="service-card">
-                    <span class="service-num mono">[02] Analytics</span>
-                    <h3 class="service-title" data-lang-content="ru">Построение Аналитики</h3>
-                    <h3 class="service-title" data-lang-content="en">Analytics Setup</h3>
-                    <h3 class="service-title" data-lang-content="pl">Budowa Analityki</h3>
-                    <p class="service-desc" data-lang-content="ru">Интеграция MMP (AppsFlyer/Adjust), SKAN, кастомные дашборды LTV.</p>
-                    <p class="service-desc" data-lang-content="en">MMP integration (AppsFlyer/Adjust), SKAN, custom LTV dashboards.</p>
-                    <p class="service-desc" data-lang-content="pl">Integracja MMP (AppsFlyer/Adjust), SKAN, niestandardowe dashboardy LTV.</p>
-                </div>
-                <div class="service-card">
-                    <span class="service-num mono">[03] Buying System</span>
-                    <h3 class="service-title" data-lang-content="ru">Системная Закупка</h3>
-                    <h3 class="service-title" data-lang-content="en">Media Buying System</h3>
-                    <h3 class="service-title" data-lang-content="pl">System Zakupu Mediów</h3>
-                    <p class="service-desc" data-lang-content="ru">Настройка структуры аккаунтов, правил биддинга и автоматизации.</p>
-                    <p class="service-desc" data-lang-content="en">Account structure setup, bidding rules, and automation.</p>
-                    <p class="service-desc" data-lang-content="pl">Konfiguracja struktury kont, reguł licytacji i automatyzacji.</p>
-                </div>
-                <div class="service-card">
-                    <span class="service-num mono">[04] Creative Ops</span>
-                    <h3 class="service-title" data-lang-content="ru">Креативный Отдел</h3>
-                    <h3 class="service-title" data-lang-content="en">Creative Production</h3>
-                    <h3 class="service-title" data-lang-content="pl">Dział Kreatywny</h3>
-                    <p class="service-desc" data-lang-content="ru">Построение "фабрики креативов": процессы, гипотезы, тесты.</p>
-                    <p class="service-desc" data-lang-content="en">Building a "creative factory": processes, hypotheses, tests.</p>
-                    <p class="service-desc" data-lang-content="pl">Budowa "fabryki kreatywnej": procesy, hipotezy, testy.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="cases" class="cases-section">
-            <h2 class="section-title">Track Record</h2>
-            <div class="cases-grid">
-                <div class="case-card">
-                    <div class="case-header">
-                        <span class="app-name">FinTech App</span>
-                        <span class="app-cat mono">Utility / EU</span>
-                    </div>
-                    <div class="kpi-grid">
-                        <div class="kpi-item"><span class="kpi-label">Spend / mo</span><span class="kpi-value">$50k+</span></div>
-                        <div class="kpi-item"><span class="kpi-label">ROAS D30</span><span class="kpi-value green">145%</span></div>
-                    </div>
-                    <p class="case-desc" data-lang-content="ru">Снижение CPA на 30% за счет смены стратегии в Google UAC.</p>
-                    <p class="case-desc" data-lang-content="en">CPA decreased by 30% via new Google UAC strategy.</p>
-                    <p class="case-desc" data-lang-content="pl">Obniżenie CPA o 30% dzięki nowej strategii Google UAC.</p>
-                </div>
-
-                <div class="case-card">
-                    <div class="case-header">
-                        <span class="app-name">Idle Tycoon</span>
-                        <span class="app-cat mono">Gamedev / US</span>
-                    </div>
-                    <div class="kpi-grid">
-                        <div class="kpi-item"><span class="kpi-label">Installs</span><span class="kpi-value">150k</span></div>
-                        <div class="kpi-item"><span class="kpi-label">ROAS D7</span><span class="kpi-value green">110%</span></div>
-                    </div>
-                    <p class="case-desc" data-lang-content="ru">Масштабирование через TikTok. Оптимизация на Purchase.</p>
-                    <p class="case-desc" data-lang-content="en">Scaling via TikTok. Purchase Event optimization.</p>
-                    <p class="case-desc" data-lang-content="pl">Skalowanie przez TikTok. Optymalizacja pod zakup.</p>
-                </div>
-
-                <div class="case-card">
-                    <div class="case-header">
-                        <span class="app-name">H&F App</span>
-                        <span class="app-cat mono">Health & Fitness / US</span>
-                    </div>
-                    <div class="kpi-grid">
-                        <div class="kpi-item"><span class="kpi-label">Rank</span><span class="kpi-value green">Top 1</span></div>
-                        <div class="kpi-item"><span class="kpi-label">Spend / mo</span><span class="kpi-value">$500k+</span></div>
-                    </div>
-                    <p class="case-desc" data-lang-content="ru">Вывод приложения в Топ-1 App Store США. Масштабирование через FB и TikTok.</p>
-                    <p class="case-desc" data-lang-content="en">Reached Top 1 in US App Store. Scaled via FB & TikTok.</p>
-                    <p class="case-desc" data-lang-content="pl">Osiągnięto Top 1 w US App Store. Skalowanie przez FB i TikTok.</p>
-                </div>
-
-                <div class="case-card">
-                    <div class="case-header">
-                        <span class="app-name">Entertainment App</span>
-                        <span class="app-cat mono">Entertainment / US (2024)</span>
-                    </div>
-                    <div class="kpi-grid">
-                        <div class="kpi-item"><span class="kpi-label">Rank</span><span class="kpi-value green">Top 1</span></div>
-                        <div class="kpi-item"><span class="kpi-label">Revenue Q4 vs Q1</span><span class="kpi-value green">+30%</span></div>
-                    </div>
-                    <p class="case-desc" data-lang-content="ru">Запуск и масштабирование развлекательного приложения до Топ-1 в США в 2024 году.</p>
-                    <p class="case-desc" data-lang-content="en">Launched and scaled an entertainment app to Top 1 US in 2024.</p>
-                    <p class="case-desc" data-lang-content="pl">Uruchomienie i skalowanie aplikacji rozrywkowej do Top 1 w USA w 2024 roku.</p>
-                </div>
-
-                <div class="case-card">
-                    <div class="case-header">
-                        <span class="app-name">Portfolio Optimization</span>
-                        <span class="app-cat mono">Management / UA Team</span>
-                    </div>
-                    <div class="kpi-grid">
-                        <div class="kpi-item"><span class="kpi-label">Profit</span><span class="kpi-value green">Positive</span></div>
-                        <div class="kpi-item"><span class="kpi-label">Efficiency</span><span class="kpi-value green">+40%</span></div>
-                    </div>
-                    <p class="case-desc" data-lang-content="ru">Оптимизация портфеля приложений и вывод отдела закупки трафика в прибыль.</p>
-                    <p class="case-desc" data-lang-content="en">Portfolio optimization and turning around the UA department to profitability.</p>
-                    <p class="case-desc" data-lang-content="pl">Optymalizacja portfolio i doprowadzenie działu UA do rentowności.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="consultation-section">
-            <div class="container consultation-content">
-                <h2 class="section-title" style="border: none; margin-bottom: 20px; padding: 0;" data-lang-content="ru">Нужен аудит или стратегия?</h2>
-                <h2 class="section-title" style="border: none; margin-bottom: 20px; padding: 0;" data-lang-content="en">Need an audit or strategy?</h2>
-                <h2 class="section-title" style="border: none; margin-bottom: 20px; padding: 0;" data-lang-content="pl">Potrzebujesz audytu lub strategii?</h2>
-
-                <p class="subtitle" style="margin: 0 auto 50px auto; max-width: 600px;" data-lang-content="ru">
-                    Запишитесь на бесплатную 30-минутную консультацию, чтобы обсудить точки роста вашего проекта.
-                </p>
-                <p class="subtitle" style="margin: 0 auto 50px auto; max-width: 600px;" data-lang-content="en">
-                    Book a free 30-minute consultation to discuss growth opportunities for your project.
-                </p>
-                <p class="subtitle" style="margin: 0 auto 50px auto; max-width: 600px;" data-lang-content="pl">
-                    Umów się na bezpłatną 30-minutową konsultację, aby omówić możliwości rozwoju Twojego projektu.
-                </p>
-
-                <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="ru">Записаться на 30-мин звонок</a>
-                <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="en">Book 30-min Intro Call</a>
-                <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="pl">Umów się na 30-min rozmowę</a>
-            </div>
-        </section>
-
-        <footer id="contact">
-            <h2 style="margin-bottom: 20px;" data-lang-content="ru">Готовы к росту?</h2>
-            <h2 style="margin-bottom: 20px;" data-lang-content="en">Ready to grow?</h2>
-            <h2 style="margin-bottom: 20px;" data-lang-content="pl">Gotowy na wzrost?</h2>
-            
-            <a href="mailto:vlad.yasinski@roimobi.com" class="cta-btn">vlad.yasinski@roimobi.com</a>
-            
-            <div class="contacts mono">
-                <a href="https://t.me/ua5er" target="_blank">Telegram</a>
-                <a href="https://www.linkedin.com/in/vlad-yasinski-98085192" target="_blank">LinkedIn</a>
-                <a href="#">Upwork</a>
-            </div>
-            
-            <div class="legal-info">
-                <p style="margin-top: 50px;">© 2024 ROIMOBI. All rights reserved.</p>
-                <p style="margin-top: 10px; color: #555;">NIP 5273049048</p>
-            </div>
-        </footer>
-    </div>
 
     <script>
-        function setLang(lang) {
-            document.body.className = 'lang-' + lang;
-            localStorage.setItem('selectedLang', lang); 
+        // Словарь переводов
+        const translations = {
+            en: {
+                nav_apps: "Apps",
+                nav_contact: "Contact",
+                hero_title: "Native iOS.<br>Powered by AI.",
+                hero_text: "Aplexity Limited crafts next-generation mobile experiences. We fuse Apple’s flawless UX with the raw power of Artificial Intelligence.",
+                hero_button: "View Our Products", // Текст кнопки на английском
+                company_name: "Aplexity Limited",
+                email_label: "Email:",
+                phone_label: "Phone:",
+                address: "Room 11114, 11F, 33 Lockhart Road,<br>Wanchai, Hong Kong, 999077",
+                rights: "© 2025 Aplexity Limited. All rights reserved."
+            },
+            ru: {
+                nav_apps: "Приложения",
+                nav_contact: "Контакты",
+                hero_title: "Нативный iOS.<br>С мощью ИИ.",
+                hero_text: "Aplexity Limited создает мобильные приложения нового поколения. Мы объединяем безупречный UX от Apple с передовыми технологиями искусственного интеллекта.",
+                hero_button: "Посмотреть продукты", // Текст кнопки на русском
+                company_name: "Aplexity Limited",
+                email_label: "Email:",
+                phone_label: "Телефон:",
+                address: "Room 11114, 11F, 33 Lockhart Road,<br>Wanchai, Гонконг, 999077",
+                rights: "© 2025 Aplexity Limited. Все права защищены."
+            },
+            pl: {
+                nav_apps: "Aplikacje",
+                nav_contact: "Kontakt",
+                hero_title: "Natywny iOS.<br>Napędzany przez AI.",
+                hero_text: "Aplexity Limited tworzy mobilne doświadczenia nowej generacji. Łączymy nieskazitelny UX Apple z surową mocą sztucznej inteligencji.",
+                hero_button: "Zobacz nasze produkty", // Текст кнопки на польском
+                company_name: "Aplexity Limited",
+                email_label: "Email:",
+                phone_label: "Telefon:",
+                address: "Room 11114, 11F, 33 Lockhart Road,<br>Wanchai, Hongkong, 999077",
+                rights: "© 2025 Aplexity Limited. Wszelkie prawa zastrzeżone."
+            }
+        };
+
+        // Функция смены языка
+        function changeLanguage(lang) {
+            // Находим все элементы с атрибутом data-i18n
+            const elements = document.querySelectorAll('[data-i18n]');
             
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            const textMap = {'ru': 'RU', 'en': 'EN', 'pl': 'PL'};
-            Array.from(document.querySelectorAll('.lang-btn')).find(el => el.textContent === textMap[lang]).classList.add('active');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    // Заменяем HTML содержимое (чтобы работали теги <br>)
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+            // Сохраняем выбор в localStorage (опционально, для запоминания)
+            localStorage.setItem('preferredLanguage', lang);
         }
 
-        const mobileToggle = document.getElementById('mobileToggle');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            const langSelector = document.getElementById('language-selector');
+            
+            // Проверяем сохраненный язык или ставим английский по умолчанию
+            const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+            langSelector.value = savedLang;
+            changeLanguage(savedLang);
 
-        mobileToggle.addEventListener('click', () => {
-            document.body.classList.toggle('menu-open');
-        });
-
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                document.body.classList.remove('menu-open');
+            // Слушатель изменения в селекте
+            langSelector.addEventListener('change', (e) => {
+                changeLanguage(e.target.value);
             });
         });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('selectedLang') || 'ru';
-            setLang(savedLang);
-        });
     </script>
+
 </body>
 </html>
