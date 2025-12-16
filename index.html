@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ROIMOBI | Vlad Yasinski</title>
     <style>
-        /* --- BASE VARIABLERS --- */
+        /* --- BASE VARIABLES --- */
         :root {
             --bg-color: #050505;
             --card-bg: rgba(20, 20, 20, 0.6);
@@ -28,7 +28,7 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
-            /* --- BACKGROUND GRID EFFECT --- */
+            /* Grid Background */
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
@@ -36,7 +36,7 @@
             position: relative;
         }
 
-        /* --- AMBIENT GLOW --- */
+        /* Ambient Glow */
         body::before {
             content: '';
             position: fixed;
@@ -52,7 +52,15 @@
 
         a { text-decoration: none; color: inherit; transition: 0.3s; }
         img { max-width: 100%; display: block; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 2; }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+            position: relative; 
+            z-index: 2; 
+        }
+        
         .highlight { color: var(--accent); text-shadow: 0 0 15px rgba(0, 255, 148, 0.4); }
         .mono { font-family: var(--font-mono); font-size: 0.85em; letter-spacing: -0.5px; }
 
@@ -66,21 +74,38 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* --- LOGIC: LANGUAGE SWITCHING --- */
+        /* --- LOGIC: LANGUAGE SWITCHING (FIXED) --- */
         [data-lang-content] { display: none; }
-        body.lang-ru [data-lang-content="ru"] { display: block; }
-        body.lang-ru span[data-lang-content="ru"] { display: inline; }
-        body.lang-en [data-lang-content="en"] { display: block; }
-        body.lang-en span[data-lang-content="en"] { display: inline; }
-        body.lang-pl [data-lang-content="pl"] { display: block; }
-        body.lang-pl span[data-lang-content="pl"] { display: inline; }
 
-        /* --- HEADER (FIXED & CLEAN) --- */
+        /* Block elements */
+        body.lang-ru h1[data-lang-content="ru"], body.lang-en h1[data-lang-content="en"], body.lang-pl h1[data-lang-content="pl"],
+        body.lang-ru h2[data-lang-content="ru"], body.lang-en h2[data-lang-content="en"], body.lang-pl h2[data-lang-content="pl"],
+        body.lang-ru p[data-lang-content="ru"], body.lang-en p[data-lang-content="en"], body.lang-pl p[data-lang-content="pl"],
+        body.lang-ru div[data-lang-content="ru"], body.lang-en div[data-lang-content="en"], body.lang-pl div[data-lang-content="pl"],
+        body.lang-ru a.mobile-link[data-lang-content="ru"], body.lang-en a.mobile-link[data-lang-content="en"], body.lang-pl a.mobile-link[data-lang-content="pl"] {
+            display: block;
+        }
+
+        /* Inline elements */
+        body.lang-ru span[data-lang-content="ru"],
+        body.lang-en span[data-lang-content="en"],
+        body.lang-pl span[data-lang-content="pl"] {
+            display: inline;
+        }
+
+        /* BUTTONS: Inline-block (CRITICAL FIX) */
+        body.lang-ru a.cta-btn[data-lang-content="ru"],
+        body.lang-en a.cta-btn[data-lang-content="en"],
+        body.lang-pl a.cta-btn[data-lang-content="pl"] {
+            display: inline-block;
+        }
+
+        /* --- HEADER --- */
         header {
             height: 90px;
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Centers items vertically */
+            align-items: center;
             border-bottom: 1px solid rgba(255,255,255,0.05);
             background: rgba(5, 5, 5, 0.8);
             backdrop-filter: blur(10px);
@@ -91,18 +116,10 @@
 
         .logo a { font-weight: 800; font-size: 1.3rem; letter-spacing: -1px; text-transform: uppercase; }
         
-        /* Container for Nav + Lang */
-        .header-right { 
-            display: flex; 
-            align-items: center; /* Ensures they are on the same line */
-        }
+        .header-right { display: flex; align-items: center; }
 
         /* Desktop Nav */
-        .desktop-nav { 
-            display: flex; 
-            gap: 30px; 
-        }
-
+        .desktop-nav { display: flex; gap: 30px; }
         .desktop-nav a { 
             font-size: 0.85rem; 
             color: var(--text-muted); 
@@ -115,211 +132,112 @@
         .lang-switcher { 
             display: flex; 
             gap: 15px; 
-            margin-left: 40px; /* Space from nav */
-            padding-left: 40px; /* Space for separator */
-            border-left: 1px solid #333; /* Clean separator line */
-            height: 30px; /* Height for separator */
+            margin-left: 40px; 
+            padding-left: 40px; 
+            border-left: 1px solid #333; 
+            height: 30px; 
             align-items: center;
         }
 
         .lang-btn { 
-            background: none; 
-            border: none; 
-            color: #444; 
-            font-size: 0.85rem; 
-            cursor: pointer; 
-            font-family: var(--font-mono); 
-            font-weight: 700; 
-            padding: 0;
-            transition: 0.3s; 
+            background: none; border: none; color: #444; 
+            font-size: 0.85rem; cursor: pointer; font-family: var(--font-mono); font-weight: 700; 
+            padding: 0; transition: 0.3s; 
         }
         .lang-btn:hover { color: #888; }
         .lang-btn.active { color: var(--accent); text-shadow: 0 0 10px var(--accent-dim); }
 
         /* --- MOBILE MENU STYLES --- */
         .mobile-menu-toggle {
-            display: none; /* Hidden on desktop */
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            z-index: 101;
+            display: none;
+            background: none; border: none; cursor: pointer; padding: 10px; z-index: 101;
         }
         .mobile-menu-toggle span {
-            display: block;
-            width: 25px;
-            height: 2px;
-            background-color: var(--text-main);
-            margin: 5px 0;
-            transition: 0.3s;
+            display: block; width: 25px; height: 2px; background-color: var(--text-main); margin: 5px 0; transition: 0.3s;
         }
-        /* Animation for hamburger */
         body.menu-open .mobile-menu-toggle span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
         body.menu-open .mobile-menu-toggle span:nth-child(2) { opacity: 0; }
         body.menu-open .mobile-menu-toggle span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
         .mobile-menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(5, 5, 5, 0.95);
-            backdrop-filter: blur(15px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(15px);
             z-index: 100;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 40px;
-            transform: translateX(100%); /* Hidden by default */
-            transition: 0.4s ease-in-out;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 40px;
+            transform: translateX(100%); transition: 0.4s ease-in-out;
         }
         body.menu-open .mobile-menu-overlay { transform: translateX(0); }
-        body.menu-open { overflow: hidden; } /* Block scroll when menu open */
+        body.menu-open { overflow: hidden; }
 
-        .mobile-menu-overlay a {
-            font-size: 1.5rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: var(--text-main);
-        }
+        .mobile-menu-overlay a { font-size: 1.5rem; font-weight: 800; text-transform: uppercase; color: var(--text-main); }
         .mobile-menu-overlay a:hover { color: var(--accent); }
-
 
         /* --- TICKER TAPE --- */
         .ticker-wrap {
-            width: 100%;
-            overflow: hidden;
-            background: #0f0f0f;
-            border-bottom: 1px solid #222;
-            padding: 10px 0;
-            position: relative;
-            z-index: 90;
+            width: 100%; overflow: hidden; background: #0f0f0f;
+            border-bottom: 1px solid #222; padding: 10px 0;
+            position: relative; z-index: 90;
         }
-        .ticker {
-            display: flex;
-            white-space: nowrap;
-            animation: ticker 60s linear infinite; 
-        }
+        .ticker { display: flex; white-space: nowrap; animation: ticker 60s linear infinite; }
         .ticker-item {
-            color: var(--text-muted);
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            margin-right: 60px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
+            color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem;
+            margin-right: 60px; text-transform: uppercase; letter-spacing: 0.5px;
+            display: flex; align-items: center;
         }
         .ticker-item span { color: var(--accent); margin-left: 8px; font-weight: 700; text-shadow: 0 0 10px rgba(0,255,148,0.3); }
-        
-        @keyframes ticker {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
+        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
         /* --- HERO --- */
-        .hero { 
-            padding: 60px 0 100px;
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            gap: 60px; 
-        }
+        .hero { padding: 60px 0 100px; display: flex; align-items: center; justify-content: space-between; gap: 60px; }
         .hero-text { flex: 1; }
-        
-        .hero-image { 
-            flex: 0 0 340px; 
-            position: relative; 
-        }
-        
+        .hero-image { flex: 0 0 340px; position: relative; }
         .hero-image::before {
-            content: '';
-            position: absolute;
-            inset: -20px;
-            background: var(--accent);
-            filter: blur(60px);
-            opacity: 0.15;
-            z-index: -1;
-            transition: 0.5s;
+            content: ''; position: absolute; inset: -20px; background: var(--accent);
+            filter: blur(60px); opacity: 0.15; z-index: -1; transition: 0.5s;
         }
-        
         .hero-image img {
-            width: 100%;
-            height: 440px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.1);
-            filter: grayscale(100%) contrast(1.1);
-            transition: 0.5s;
+            width: 100%; height: 440px; object-fit: cover; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1); filter: grayscale(100%) contrast(1.1); transition: 0.5s;
         }
-        
-        .hero-image:hover img { 
-            filter: grayscale(0%); 
-            border-color: var(--accent); 
-            transform: scale(1.02);
-        }
+        .hero-image:hover img { filter: grayscale(0%); border-color: var(--accent); transform: scale(1.02); }
         .hero-image:hover::before { opacity: 0.3; }
 
         h1 { font-size: 4rem; line-height: 1.05; font-weight: 800; margin-bottom: 25px; letter-spacing: -2px; }
         .subtitle { font-size: 1.2rem; color: var(--text-muted); max-width: 550px; margin-bottom: 40px; }
-        
         .status-badge {
-            display: inline-block; 
-            border: 1px solid var(--accent); 
-            background: var(--accent-dim);
-            color: var(--accent);
-            padding: 6px 14px; border-radius: 4px;
-            font-size: 0.75rem; margin-bottom: 25px; 
-            text-transform: uppercase; letter-spacing: 1px;
+            display: inline-block; border: 1px solid var(--accent); background: var(--accent-dim);
+            color: var(--accent); padding: 6px 14px; border-radius: 4px;
+            font-size: 0.75rem; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* --- CARDS --- */
+        /* --- CARDS & SERVICES --- */
         .approach { padding: 0 0 100px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
         .approach-item {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 8px;
-            transition: 0.3s;
+            background: var(--card-bg); backdrop-filter: blur(10px); padding: 30px;
+            border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; transition: 0.3s;
         }
-        .approach-item:hover {
-            border-color: var(--accent);
-            background: rgba(20, 20, 20, 0.9);
-            transform: translateY(-5px);
-        }
+        .approach-item:hover { border-color: var(--accent); background: rgba(20, 20, 20, 0.9); transform: translateY(-5px); }
         .approach-item h3 { margin-bottom: 15px; font-size: 1.1rem; color: #fff; }
         .approach-item p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
 
         .services-section { padding: 100px 0; background-color: transparent; }
         .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .service-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            padding: 35px;
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            background: var(--card-bg); backdrop-filter: blur(10px); padding: 35px;
+            border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; transition: all 0.3s ease;
             display: flex; flex-direction: column;
         }
-        .service-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+        .service-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .service-num { color: var(--accent); font-size: 0.85rem; margin-bottom: 20px; opacity: 0.8; }
         .service-title { font-size: 1.3rem; margin-bottom: 15px; font-weight: 700; line-height: 1.2; }
         .service-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
 
+        /* --- CASES --- */
         .cases-section { padding: 100px 0; }
         .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px; }
         .case-card {
-            background: var(--card-bg); 
-            padding: 30px; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px;
-            transition: 0.3s;
-            backdrop-filter: blur(10px);
+            background: var(--card-bg); padding: 30px; border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px; transition: 0.3s; backdrop-filter: blur(10px);
         }
         .case-card:hover { border-color: var(--accent); transform: scale(1.02); }
         .case-header { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
@@ -327,62 +245,48 @@
         .app-cat { color: var(--text-muted); font-size: 0.85rem; }
         .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .kpi-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
-        .kpi-value { 
-            font-size: 1.5rem; 
-            font-weight: 700; 
-            color: var(--text-main); 
-            font-family: var(--font-mono); 
-            margin-left: 10px;
-        }
+        .kpi-value { font-size: 1.5rem; font-weight: 700; color: var(--text-main); font-family: var(--font-mono); margin-left: 10px; }
         .kpi-value.green { color: var(--accent); text-shadow: 0 0 10px rgba(0, 255, 148, 0.3); }
         .case-desc { font-size: 0.9rem; color: #aaa; line-height: 1.5; }
 
-        /* --- NEW CONSULTATION SECTION --- */
+        /* --- CONSULTATION SECTION (NEW & FIXED) --- */
         .consultation-section {
-            padding: 80px 0;
+            padding: 100px 0;
             text-align: center;
-            background: linear-gradient(rgba(20,20,20,0.8), rgba(5,5,5,1));
-            border-top: 1px solid #222;
-            border-bottom: 1px solid #222;
+            background: linear-gradient(180deg, rgba(10,10,10,0) 0%, rgba(20,20,20,0.8) 100%);
+            border-top: 1px solid #1a1a1a;
             position: relative;
+            overflow: hidden;
         }
-        /* Glow effect for consultation */
         .consultation-section::before {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 40%; height: 40%;
-            background: var(--accent);
-            filter: blur(120px);
-            opacity: 0.15;
-            pointer-events: none;
+            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 600px; height: 300px; background: var(--accent); filter: blur(150px);
+            opacity: 0.08; pointer-events: none; z-index: 0;
         }
+        .consultation-content { position: relative; z-index: 2; }
 
-        /* --- FOOTER --- */
-        footer { padding: 80px 0; text-align: center; }
+        /* BUTTONS */
         .cta-btn {
             display: inline-block; background: var(--text-main); color: #000;
             padding: 18px 45px; font-weight: 800; font-size: 1.1rem; border-radius: 4px; margin-bottom: 40px;
-            transition: 0.3s;
-            cursor: pointer;
-            border: none;
+            transition: 0.3s; cursor: pointer; border: none; text-decoration: none;
         }
         .cta-btn.accent-btn { background: var(--accent); color: #000; }
         .cta-btn:hover { background: var(--accent); box-shadow: 0 0 20px var(--accent-dim); transform: translateY(-2px); }
         .cta-btn.accent-btn:hover { background: #fff; }
-        
+
+        /* FOOTER */
+        footer { padding: 80px 0; border-top: 1px solid #222; text-align: center; }
         .contacts a { margin: 0 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
         .contacts a:hover { color: var(--text-main); text-shadow: 0 0 5px #fff; }
         .legal-info { margin-top: 30px; font-size: 0.75rem; color: #333; font-family: var(--font-mono); }
 
-        /* --- MOBILE BREAKPOINT --- */
+        /* RESPONSIVE */
         @media (max-width: 900px) {
-            .desktop-nav { display: none; } /* Hide desktop menu */
-            .mobile-menu-toggle { display: block; } /* Show hamburger */
-            
+            .desktop-nav { display: none; }
+            .mobile-menu-toggle { display: block; }
             .header-right { gap: 20px; }
-            .lang-switcher { margin-left: 0; padding-left: 20px; } /* Adjust lang switcher pos */
+            .lang-switcher { margin-left: 0; padding-left: 20px; }
             
             .hero { flex-direction: column-reverse; text-align: center; gap: 40px; padding: 50px 0; }
             .hero-image { flex: 0 0 auto; width: 280px; }
@@ -460,7 +364,6 @@
         <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="mobile-link highlight" style="margin-top: 20px;" data-lang-content="pl">Book A Call</a>
     </div>
 
-
     <div class="ticker-wrap">
         <div class="ticker">
             <div class="ticker-item">Top 1 US App Store <span>Track Record</span></div>
@@ -475,7 +378,6 @@
             <div class="ticker-item">P&L <span>Management</span></div>
             <div class="ticker-item">Funnel <span>Creating</span></div>
             <div class="ticker-item">Full-Cycle <span>UA</span></div>
-
             <div class="ticker-item">Top 1 US App Store <span>Track Record</span></div>
             <div class="ticker-item">ROAS-Based <span>Optimization</span></div>
             <div class="ticker-item">Web2App / App2App <span>Flows</span></div>
@@ -506,12 +408,13 @@
                 </p>
                 <p class="subtitle" data-lang-content="en">
                     I don't focus on cheap installs. <br>
-                    I scale apps focusing on <span class="highlight">ROAS</span> и <span class="highlight">LTV</span>.
+                    I scale apps focusing on <span class="highlight">ROAS</span> and <span class="highlight">LTV</span>.
                 </p>
                 <p class="subtitle" data-lang-content="pl">
                     Nie skupiam się na tanich instalacjach. <br>
                     Skaluję aplikacje koncentrując się na <span class="highlight">ROAS</span> i <span class="highlight">LTV</span>.
                 </p>
+                 
                  <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="ru">Записаться на консультацию</a>
                  <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="en">Book 30-min Consultation</a>
                  <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="pl">Umów się na konsultację</a>
@@ -630,9 +533,9 @@
                         <div class="kpi-item"><span class="kpi-label">Rank</span><span class="kpi-value green">Top 1</span></div>
                         <div class="kpi-item"><span class="kpi-label">Spend / mo</span><span class="kpi-value">$500k+</span></div>
                     </div>
-                    <p class="case-desc" data-lang-content="ru">Вывод приложения в Топ-1 App Store США в категории Health & Fitness. Масштабирование через FB и TikTok.</p>
-                    <p class="case-desc" data-lang-content="en">Reached Top 1 in US App Store (Health & Fitness). Scaled via FB & TikTok.</p>
-                    <p class="case-desc" data-lang-content="pl">Osiągnięto Top 1 w US App Store (Health & Fitness). Skalowanie przez FB i TikTok.</p>
+                    <p class="case-desc" data-lang-content="ru">Вывод приложения в Топ-1 App Store США. Масштабирование через FB и TikTok.</p>
+                    <p class="case-desc" data-lang-content="en">Reached Top 1 in US App Store. Scaled via FB & TikTok.</p>
+                    <p class="case-desc" data-lang-content="pl">Osiągnięto Top 1 w US App Store. Skalowanie przez FB i TikTok.</p>
                 </div>
 
                 <div class="case-card">
@@ -644,9 +547,9 @@
                         <div class="kpi-item"><span class="kpi-label">Rank</span><span class="kpi-value green">Top 1</span></div>
                         <div class="kpi-item"><span class="kpi-label">Revenue Q4 vs Q1</span><span class="kpi-value green">+30%</span></div>
                     </div>
-                    <p class="case-desc" data-lang-content="ru">Запуск и масштабирование развлекательного приложения до Топ-1 в США в 2024 году. Рост выручки за год.</p>
-                    <p class="case-desc" data-lang-content="en">Launched and scaled an entertainment app to Top 1 US in 2024. Year-over-year revenue growth.</p>
-                    <p class="case-desc" data-lang-content="pl">Uruchomienie i skalowanie aplikacji rozrywkowej do Top 1 w USA w 2024 roku. Wzrost przychodów rok do roku.</p>
+                    <p class="case-desc" data-lang-content="ru">Запуск и масштабирование развлекательного приложения до Топ-1 в США в 2024 году.</p>
+                    <p class="case-desc" data-lang-content="en">Launched and scaled an entertainment app to Top 1 US in 2024.</p>
+                    <p class="case-desc" data-lang-content="pl">Uruchomienie i skalowanie aplikacji rozrywkowej do Top 1 w USA w 2024 roku.</p>
                 </div>
 
                 <div class="case-card">
@@ -658,36 +561,39 @@
                         <div class="kpi-item"><span class="kpi-label">Profit</span><span class="kpi-value green">Positive</span></div>
                         <div class="kpi-item"><span class="kpi-label">Efficiency</span><span class="kpi-value green">+40%</span></div>
                     </div>
-                    <p class="case-desc" data-lang-content="ru">Оптимизация портфеля приложений и вывод отдела закупки трафика в прибыль (P&L Positive).</p>
-                    <p class="case-desc" data-lang-content="en">Portfolio optimization and turning around the UA department to profitability (P&L Positive).</p>
-                    <p class="case-desc" data-lang-content="pl">Optymalizacja portfolio i doprowadzenie działu UA do rentowności (P&L Positive).</p>
+                    <p class="case-desc" data-lang-content="ru">Оптимизация портфеля приложений и вывод отдела закупки трафика в прибыль.</p>
+                    <p class="case-desc" data-lang-content="en">Portfolio optimization and turning around the UA department to profitability.</p>
+                    <p class="case-desc" data-lang-content="pl">Optymalizacja portfolio i doprowadzenie działu UA do rentowności.</p>
                 </div>
-
             </div>
         </section>
-    </div>
 
-    <section class="consultation-section">
-        <div class="container">
-            <h2 class="section-title" style="border: none; margin-bottom: 30px;" data-lang-content="ru">Нужен аудит или стратегия?</h2>
-            <h2 class="section-title" style="border: none; margin-bottom: 30px;" data-lang-content="en">Need an audit or strategy?</h2>
-            <h2 class="section-title" style="border: none; margin-bottom: 30px;" data-lang-content="pl">Potrzebujesz audytu lub strategii?</h2>
+        <section class="consultation-section">
+            <div class="container consultation-content">
+                <h2 class="section-title" style="border: none; margin-bottom: 20px; padding: 0;" data-lang-content="ru">Нужен аудит или стратегия?</h2>
+                <h2 class="section-title" style="border: none; margin-bottom: 20px; padding: 0;" data-lang-content="en">Need an audit or strategy?</h2>
+                <h2 class="section-title" style="border: none; margin-bottom: 20px; padding: 0;" data-lang-content="pl">Potrzebujesz audytu lub strategii?</h2>
 
-            <p class="subtitle" style="margin: 0 auto 40px auto;" data-lang-content="ru">Запишитесь на бесплатную 30-минутную консультацию, чтобы обсудить точки роста вашего проекта.</p>
-            <p class="subtitle" style="margin: 0 auto 40px auto;" data-lang-content="en">Book a free 30-minute consultation to discuss growth opportunities for your project.</p>
-            <p class="subtitle" style="margin: 0 auto 40px auto;" data-lang-content="pl">Umów się na bezpłatną 30-minutową konsultację, aby omówić możliwości rozwoju Twojego projektu.</p>
+                <p class="subtitle" style="margin: 0 auto 50px auto; max-width: 600px;" data-lang-content="ru">
+                    Запишитесь на бесплатную 30-минутную консультацию, чтобы обсудить точки роста вашего проекта.
+                </p>
+                <p class="subtitle" style="margin: 0 auto 50px auto; max-width: 600px;" data-lang-content="en">
+                    Book a free 30-minute consultation to discuss growth opportunities for your project.
+                </p>
+                <p class="subtitle" style="margin: 0 auto 50px auto; max-width: 600px;" data-lang-content="pl">
+                    Umów się na bezpłatną 30-minutową konsultację, aby omówić możliwości rozwoju Twojego projektu.
+                </p>
 
-            <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="ru">Записаться на 30-мин звонок</a>
-            <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="en">Book 30-min Intro Call</a>
-            <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="pl">Umów się na 30-min rozmowę</a>
-        </div>
-    </section>
+                <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="ru">Записаться на 30-мин звонок</a>
+                <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="en">Book 30-min Intro Call</a>
+                <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="pl">Umów się na 30-min rozmowę</a>
+            </div>
+        </section>
 
-    <div class="container">
         <footer id="contact">
-            <h2 style="margin-bottom: 20px;" data-lang-content="ru">Есть вопросы?</h2>
-            <h2 style="margin-bottom: 20px;" data-lang-content="en">Questions?</h2>
-            <h2 style="margin-bottom: 20px;" data-lang-content="pl">Pytania?</h2>
+            <h2 style="margin-bottom: 20px;" data-lang-content="ru">Готовы к росту?</h2>
+            <h2 style="margin-bottom: 20px;" data-lang-content="en">Ready to grow?</h2>
+            <h2 style="margin-bottom: 20px;" data-lang-content="pl">Gotowy na wzrost?</h2>
             
             <a href="mailto:vlad.yasinski@roimobi.com" class="cta-btn">vlad.yasinski@roimobi.com</a>
             
@@ -705,7 +611,6 @@
     </div>
 
     <script>
-        // --- LANGUAGE SETTING ---
         function setLang(lang) {
             document.body.className = 'lang-' + lang;
             localStorage.setItem('selectedLang', lang); 
@@ -715,7 +620,6 @@
             Array.from(document.querySelectorAll('.lang-btn')).find(el => el.textContent === textMap[lang]).classList.add('active');
         }
 
-        // --- MOBILE MENU TOGGLE ---
         const mobileToggle = document.getElementById('mobileToggle');
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileLinks = document.querySelectorAll('.mobile-link');
@@ -724,14 +628,12 @@
             document.body.classList.toggle('menu-open');
         });
 
-        // Close menu when a link is clicked
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 document.body.classList.remove('menu-open');
             });
         });
 
-        // --- INIT ---
         document.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('selectedLang') || 'ru';
             setLang(savedLang);
