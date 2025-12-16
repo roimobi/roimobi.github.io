@@ -19,6 +19,8 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html { scroll-behavior: smooth; }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
@@ -95,19 +97,20 @@
             align-items: center; /* Ensures they are on the same line */
         }
 
-        nav { 
+        /* Desktop Nav */
+        .desktop-nav { 
             display: flex; 
             gap: 30px; 
         }
 
-        nav a { 
+        .desktop-nav a { 
             font-size: 0.85rem; 
             color: var(--text-muted); 
             font-weight: 600; 
             text-transform: uppercase; 
             letter-spacing: 0.5px; 
         }
-        nav a:hover, nav a.active { color: var(--text-main); text-shadow: 0 0 8px rgba(255,255,255,0.3); }
+        .desktop-nav a:hover, .desktop-nav a.active { color: var(--text-main); text-shadow: 0 0 8px rgba(255,255,255,0.3); }
 
         .lang-switcher { 
             display: flex; 
@@ -121,7 +124,7 @@
 
         .lang-btn { 
             background: none; 
-            border: none; /* REMOVED BORDERS */
+            border: none; 
             color: #444; 
             font-size: 0.85rem; 
             cursor: pointer; 
@@ -132,6 +135,57 @@
         }
         .lang-btn:hover { color: #888; }
         .lang-btn.active { color: var(--accent); text-shadow: 0 0 10px var(--accent-dim); }
+
+        /* --- MOBILE MENU STYLES --- */
+        .mobile-menu-toggle {
+            display: none; /* Hidden on desktop */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 101;
+        }
+        .mobile-menu-toggle span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background-color: var(--text-main);
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+        /* Animation for hamburger */
+        body.menu-open .mobile-menu-toggle span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        body.menu-open .mobile-menu-toggle span:nth-child(2) { opacity: 0; }
+        body.menu-open .mobile-menu-toggle span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            transform: translateX(100%); /* Hidden by default */
+            transition: 0.4s ease-in-out;
+        }
+        body.menu-open .mobile-menu-overlay { transform: translateX(0); }
+        body.menu-open { overflow: hidden; } /* Block scroll when menu open */
+
+        .mobile-menu-overlay a {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--text-main);
+        }
+        .mobile-menu-overlay a:hover { color: var(--accent); }
+
 
         /* --- TICKER TAPE --- */
         .ticker-wrap {
@@ -265,7 +319,7 @@
             background: var(--card-bg); 
             padding: 30px; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px;
             transition: 0.3s;
-            backdrop-filter: blur(10px); /* Добавлен блюр для соответствия стилю */
+            backdrop-filter: blur(10px);
         }
         .case-card:hover { border-color: var(--accent); transform: scale(1.02); }
         .case-header { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
@@ -278,34 +332,66 @@
             font-weight: 700; 
             color: var(--text-main); 
             font-family: var(--font-mono); 
-            margin-left: 10px; /* Добавлен отступ слева, как просили */
+            margin-left: 10px;
         }
         .kpi-value.green { color: var(--accent); text-shadow: 0 0 10px rgba(0, 255, 148, 0.3); }
         .case-desc { font-size: 0.9rem; color: #aaa; line-height: 1.5; }
 
-        footer { padding: 80px 0; border-top: 1px solid #222; text-align: center; }
+        /* --- NEW CONSULTATION SECTION --- */
+        .consultation-section {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(rgba(20,20,20,0.8), rgba(5,5,5,1));
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+            position: relative;
+        }
+        /* Glow effect for consultation */
+        .consultation-section::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40%; height: 40%;
+            background: var(--accent);
+            filter: blur(120px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        /* --- FOOTER --- */
+        footer { padding: 80px 0; text-align: center; }
         .cta-btn {
             display: inline-block; background: var(--text-main); color: #000;
             padding: 18px 45px; font-weight: 800; font-size: 1.1rem; border-radius: 4px; margin-bottom: 40px;
             transition: 0.3s;
+            cursor: pointer;
+            border: none;
         }
+        .cta-btn.accent-btn { background: var(--accent); color: #000; }
         .cta-btn:hover { background: var(--accent); box-shadow: 0 0 20px var(--accent-dim); transform: translateY(-2px); }
+        .cta-btn.accent-btn:hover { background: #fff; }
+        
         .contacts a { margin: 0 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
         .contacts a:hover { color: var(--text-main); text-shadow: 0 0 5px #fff; }
         .legal-info { margin-top: 30px; font-size: 0.75rem; color: #333; font-family: var(--font-mono); }
 
+        /* --- MOBILE BREAKPOINT --- */
         @media (max-width: 900px) {
+            .desktop-nav { display: none; } /* Hide desktop menu */
+            .mobile-menu-toggle { display: block; } /* Show hamburger */
+            
+            .header-right { gap: 20px; }
+            .lang-switcher { margin-left: 0; padding-left: 20px; } /* Adjust lang switcher pos */
+            
             .hero { flex-direction: column-reverse; text-align: center; gap: 40px; padding: 50px 0; }
             .hero-image { flex: 0 0 auto; width: 280px; }
             .hero-image img { height: 380px; }
             .approach { grid-template-columns: 1fr; text-align: center; gap: 20px; }
             h1 { font-size: 2.8rem; }
-            nav { display: none; }
-            .header-right { gap: 0; }
-            .lang-switcher { margin-left: auto; padding-left: 0; border-left: none; }
             .ticker-item { font-size: 0.7rem; }
             .ticker { animation: ticker 40s linear infinite; }
-            .cases-grid { grid-template-columns: 1fr; } /* Кейсы в одну колонку на мобильных */
+            .cases-grid { grid-template-columns: 1fr; }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -319,7 +405,7 @@
             </div>
             
             <div class="header-right">
-                <nav>
+                <nav class="desktop-nav">
                     <a href="#approach" data-lang-content="ru">Подход</a>
                     <a href="#approach" data-lang-content="en">Approach</a>
                     <a href="#approach" data-lang-content="pl">Podejście</a>
@@ -342,36 +428,38 @@
                     <button class="lang-btn" onclick="setLang('en')">EN</button>
                     <button class="lang-btn" onclick="setLang('pl')">PL</button>
                 </div>
+
+                 <button class="mobile-menu-toggle" id="mobileToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </div>
-        <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Vlad Yasinski",
-  "url": "https://roimobi.com",
-  "jobTitle": "User Acquisition Specialist",
-  "description": "Senior Mobile User Acquisition Manager specializing in ROAS-based scaling, Web2App flows, and aggressive growth strategies for Tier-1 markets.",
-  "knowsAbout": [
-    "Mobile User Acquisition",
-    "Google UAC",
-    "Facebook Ads",
-    "TikTok Ads",
-    "SKAdNetwork",
-    "Mobile Attribution",
-    "Growth Marketing"
-  ],
-  "sameAs": [
-    "https://www.linkedin.com/in/vlad-yasinski-98085192",
-    "https://t.me/ua5er"
-  ],
-  "worksFor": {
-    "@type": "Organization",
-    "name": "ROIMOBI"
-  }
-}
-</script>
     </header>
+
+    <div class="mobile-menu-overlay" id="mobileMenu">
+        <a href="#approach" class="mobile-link" data-lang-content="ru">Подход</a>
+        <a href="#approach" class="mobile-link" data-lang-content="en">Approach</a>
+        <a href="#approach" class="mobile-link" data-lang-content="pl">Podejście</a>
+
+        <a href="#services" class="mobile-link" data-lang-content="ru">Услуги</a>
+        <a href="#services" class="mobile-link" data-lang-content="en">Services</a>
+        <a href="#services" class="mobile-link" data-lang-content="pl">Usługi</a>
+        
+        <a href="blog.html" class="mobile-link" data-lang-content="ru">Статьи</a>
+        <a href="blog.html" class="mobile-link" data-lang-content="en">Blog</a>
+        <a href="blog.html" class="mobile-link" data-lang-content="pl">Blog</a>
+
+        <a href="#cases" class="mobile-link" data-lang-content="ru">Кейсы</a>
+        <a href="#cases" class="mobile-link" data-lang-content="en">Cases</a>
+        <a href="#cases" class="mobile-link" data-lang-content="pl">Case'y</a>
+
+        <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="mobile-link highlight" style="margin-top: 20px;" data-lang-content="ru">Book A Call</a>
+        <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="mobile-link highlight" style="margin-top: 20px;" data-lang-content="en">Book A Call</a>
+        <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="mobile-link highlight" style="margin-top: 20px;" data-lang-content="pl">Book A Call</a>
+    </div>
+
 
     <div class="ticker-wrap">
         <div class="ticker">
@@ -424,6 +512,9 @@
                     Nie skupiam się na tanich instalacjach. <br>
                     Skaluję aplikacje koncentrując się na <span class="highlight">ROAS</span> i <span class="highlight">LTV</span>.
                 </p>
+                 <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="ru">Записаться на консультацию</a>
+                 <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="en">Book 30-min Consultation</a>
+                 <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="pl">Umów się na konsultację</a>
             </div>
             
             <div class="hero-image">
@@ -574,11 +665,29 @@
 
             </div>
         </section>
+    </div>
 
+    <section class="consultation-section">
+        <div class="container">
+            <h2 class="section-title" style="border: none; margin-bottom: 30px;" data-lang-content="ru">Нужен аудит или стратегия?</h2>
+            <h2 class="section-title" style="border: none; margin-bottom: 30px;" data-lang-content="en">Need an audit or strategy?</h2>
+            <h2 class="section-title" style="border: none; margin-bottom: 30px;" data-lang-content="pl">Potrzebujesz audytu lub strategii?</h2>
+
+            <p class="subtitle" style="margin: 0 auto 40px auto;" data-lang-content="ru">Запишитесь на бесплатную 30-минутную консультацию, чтобы обсудить точки роста вашего проекта.</p>
+            <p class="subtitle" style="margin: 0 auto 40px auto;" data-lang-content="en">Book a free 30-minute consultation to discuss growth opportunities for your project.</p>
+            <p class="subtitle" style="margin: 0 auto 40px auto;" data-lang-content="pl">Umów się na bezpłatną 30-minutową konsultację, aby omówić możliwości rozwoju Twojego projektu.</p>
+
+            <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="ru">Записаться на 30-мин звонок</a>
+            <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="en">Book 30-min Intro Call</a>
+            <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="pl">Umów się na 30-min rozmowę</a>
+        </div>
+    </section>
+
+    <div class="container">
         <footer id="contact">
-            <h2 style="margin-bottom: 20px;" data-lang-content="ru">Готовы к росту?</h2>
-            <h2 style="margin-bottom: 20px;" data-lang-content="en">Ready to grow?</h2>
-            <h2 style="margin-bottom: 20px;" data-lang-content="pl">Gotowy na wzrost?</h2>
+            <h2 style="margin-bottom: 20px;" data-lang-content="ru">Есть вопросы?</h2>
+            <h2 style="margin-bottom: 20px;" data-lang-content="en">Questions?</h2>
+            <h2 style="margin-bottom: 20px;" data-lang-content="pl">Pytania?</h2>
             
             <a href="mailto:vlad.yasinski@roimobi.com" class="cta-btn">vlad.yasinski@roimobi.com</a>
             
@@ -596,6 +705,7 @@
     </div>
 
     <script>
+        // --- LANGUAGE SETTING ---
         function setLang(lang) {
             document.body.className = 'lang-' + lang;
             localStorage.setItem('selectedLang', lang); 
@@ -605,6 +715,23 @@
             Array.from(document.querySelectorAll('.lang-btn')).find(el => el.textContent === textMap[lang]).classList.add('active');
         }
 
+        // --- MOBILE MENU TOGGLE ---
+        const mobileToggle = document.getElementById('mobileToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileToggle.addEventListener('click', () => {
+            document.body.classList.toggle('menu-open');
+        });
+
+        // Close menu when a link is clicked
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                document.body.classList.remove('menu-open');
+            });
+        });
+
+        // --- INIT ---
         document.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('selectedLang') || 'ru';
             setLang(savedLang);
