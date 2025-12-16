@@ -28,7 +28,6 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
-            /* Grid Background */
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
@@ -74,10 +73,12 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* --- LOGIC: LANGUAGE SWITCHING (FIXED) --- */
+        /* --- LOGIC: LANGUAGE SWITCHING --- */
+        
+        /* 1. Скрываем все элементы с атрибутом языка по умолчанию */
         [data-lang-content] { display: none; }
 
-        /* Block elements */
+        /* 2. Правила для БЛОЧНЫХ элементов (заголовки, параграфы) */
         body.lang-ru h1[data-lang-content="ru"], body.lang-en h1[data-lang-content="en"], body.lang-pl h1[data-lang-content="pl"],
         body.lang-ru h2[data-lang-content="ru"], body.lang-en h2[data-lang-content="en"], body.lang-pl h2[data-lang-content="pl"],
         body.lang-ru p[data-lang-content="ru"], body.lang-en p[data-lang-content="en"], body.lang-pl p[data-lang-content="pl"],
@@ -86,18 +87,11 @@
             display: block;
         }
 
-        /* Inline elements */
+        /* 3. Правила для СТРОЧНЫХ элементов (span внутри кнопок и текста) */
         body.lang-ru span[data-lang-content="ru"],
         body.lang-en span[data-lang-content="en"],
         body.lang-pl span[data-lang-content="pl"] {
             display: inline;
-        }
-
-        /* BUTTONS: Inline-block (CRITICAL FIX) */
-        body.lang-ru a.cta-btn[data-lang-content="ru"],
-        body.lang-en a.cta-btn[data-lang-content="en"],
-        body.lang-pl a.cta-btn[data-lang-content="pl"] {
-            display: inline-block;
         }
 
         /* --- HEADER --- */
@@ -249,7 +243,7 @@
         .kpi-value.green { color: var(--accent); text-shadow: 0 0 10px rgba(0, 255, 148, 0.3); }
         .case-desc { font-size: 0.9rem; color: #aaa; line-height: 1.5; }
 
-        /* --- CONSULTATION SECTION (NEW & FIXED) --- */
+        /* --- CONSULTATION SECTION --- */
         .consultation-section {
             padding: 100px 0;
             text-align: center;
@@ -359,9 +353,11 @@
         <a href="#cases" class="mobile-link" data-lang-content="en">Cases</a>
         <a href="#cases" class="mobile-link" data-lang-content="pl">Case'y</a>
 
-        <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="mobile-link highlight" style="margin-top: 20px;" data-lang-content="ru">Book A Call</a>
-        <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="mobile-link highlight" style="margin-top: 20px;" data-lang-content="en">Book A Call</a>
-        <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="mobile-link highlight" style="margin-top: 20px;" data-lang-content="pl">Book A Call</a>
+        <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="mobile-link highlight" style="margin-top: 20px;">
+            <span data-lang-content="ru">Записаться на звонок</span>
+            <span data-lang-content="en">Book A Call</span>
+            <span data-lang-content="pl">Umów rozmowę</span>
+        </a>
     </div>
 
     <div class="ticker-wrap">
@@ -415,9 +411,11 @@
                     Skaluję aplikacje koncentrując się na <span class="highlight">ROAS</span> i <span class="highlight">LTV</span>.
                 </p>
                  
-                 <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="ru">Записаться на консультацию</a>
-                 <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="en">Book 30-min Consultation</a>
-                 <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="pl">Umów się na konsultację</a>
+                 <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn">
+                    <span data-lang-content="ru">Записаться на консультацию</span>
+                    <span data-lang-content="en">Book 30-min Consultation</span>
+                    <span data-lang-content="pl">Umów się na konsultację</span>
+                 </a>
             </div>
             
             <div class="hero-image">
@@ -533,9 +531,9 @@
                         <div class="kpi-item"><span class="kpi-label">Rank</span><span class="kpi-value green">Top 1</span></div>
                         <div class="kpi-item"><span class="kpi-label">Spend / mo</span><span class="kpi-value">$500k+</span></div>
                     </div>
-                    <p class="case-desc" data-lang-content="ru">Вывод приложения в Топ-1 App Store США. Масштабирование через FB и TikTok.</p>
-                    <p class="case-desc" data-lang-content="en">Reached Top 1 in US App Store. Scaled via FB & TikTok.</p>
-                    <p class="case-desc" data-lang-content="pl">Osiągnięto Top 1 w US App Store. Skalowanie przez FB i TikTok.</p>
+                    <p class="case-desc" data-lang-content="ru">Вывод приложения в Топ-1 App Store США в категории Health & Fitness. Масштабирование через FB и TikTok.</p>
+                    <p class="case-desc" data-lang-content="en">Reached Top 1 in US App Store (Health & Fitness). Scaled via FB & TikTok.</p>
+                    <p class="case-desc" data-lang-content="pl">Osiągnięto Top 1 w US App Store (Health & Fitness). Skalowanie przez FB i TikTok.</p>
                 </div>
 
                 <div class="case-card">
@@ -547,9 +545,9 @@
                         <div class="kpi-item"><span class="kpi-label">Rank</span><span class="kpi-value green">Top 1</span></div>
                         <div class="kpi-item"><span class="kpi-label">Revenue Q4 vs Q1</span><span class="kpi-value green">+30%</span></div>
                     </div>
-                    <p class="case-desc" data-lang-content="ru">Запуск и масштабирование развлекательного приложения до Топ-1 в США в 2024 году.</p>
-                    <p class="case-desc" data-lang-content="en">Launched and scaled an entertainment app to Top 1 US in 2024.</p>
-                    <p class="case-desc" data-lang-content="pl">Uruchomienie i skalowanie aplikacji rozrywkowej do Top 1 w USA w 2024 roku.</p>
+                    <p class="case-desc" data-lang-content="ru">Запуск и масштабирование развлекательного приложения до Топ-1 в США в 2024 году. Рост выручки за год.</p>
+                    <p class="case-desc" data-lang-content="en">Launched and scaled an entertainment app to Top 1 US in 2024. Year-over-year revenue growth.</p>
+                    <p class="case-desc" data-lang-content="pl">Uruchomienie i skalowanie aplikacji rozrywkowej do Top 1 w USA w 2024 roku. Wzrost przychodów rok do roku.</p>
                 </div>
 
                 <div class="case-card">
@@ -561,10 +559,11 @@
                         <div class="kpi-item"><span class="kpi-label">Profit</span><span class="kpi-value green">Positive</span></div>
                         <div class="kpi-item"><span class="kpi-label">Efficiency</span><span class="kpi-value green">+40%</span></div>
                     </div>
-                    <p class="case-desc" data-lang-content="ru">Оптимизация портфеля приложений и вывод отдела закупки трафика в прибыль.</p>
-                    <p class="case-desc" data-lang-content="en">Portfolio optimization and turning around the UA department to profitability.</p>
-                    <p class="case-desc" data-lang-content="pl">Optymalizacja portfolio i doprowadzenie działu UA do rentowności.</p>
+                    <p class="case-desc" data-lang-content="ru">Оптимизация портфеля приложений и вывод отдела закупки трафика в прибыль (P&L Positive).</p>
+                    <p class="case-desc" data-lang-content="en">Portfolio optimization and turning around the UA department to profitability (P&L Positive).</p>
+                    <p class="case-desc" data-lang-content="pl">Optymalizacja portfolio i doprowadzenie działu UA do rentowności (P&L Positive).</p>
                 </div>
+
             </div>
         </section>
 
@@ -584,16 +583,18 @@
                     Umów się na bezpłatną 30-minutową konsultację, aby omówić możliwości rozwoju Twojego projektu.
                 </p>
 
-                <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="ru">Записаться на 30-мин звонок</a>
-                <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="en">Book 30-min Intro Call</a>
-                <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn" data-lang-content="pl">Umów się na 30-min rozmowę</a>
+                <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="cta-btn accent-btn">
+                    <span data-lang-content="ru">Записаться на 30-мин звонок</span>
+                    <span data-lang-content="en">Book 30-min Intro Call</span>
+                    <span data-lang-content="pl">Umów się na 30-min rozmowę</span>
+                </a>
             </div>
         </section>
 
         <footer id="contact">
-            <h2 style="margin-bottom: 20px;" data-lang-content="ru">Готовы к росту?</h2>
-            <h2 style="margin-bottom: 20px;" data-lang-content="en">Ready to grow?</h2>
-            <h2 style="margin-bottom: 20px;" data-lang-content="pl">Gotowy na wzrost?</h2>
+            <h2 style="margin-bottom: 20px;" data-lang-content="ru">Есть вопросы?</h2>
+            <h2 style="margin-bottom: 20px;" data-lang-content="en">Questions?</h2>
+            <h2 style="margin-bottom: 20px;" data-lang-content="pl">Pytania?</h2>
             
             <a href="mailto:vlad.yasinski@roimobi.com" class="cta-btn">vlad.yasinski@roimobi.com</a>
             
