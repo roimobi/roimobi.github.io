@@ -4,150 +4,206 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vlad Yasinski - CV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --accent-color: #2980b9;
-            --text-color: #333;
-            --bg-color: #f4f4f4;
+            --primary-color: #111827; /* Почти черный для основного текста */
+            --secondary-color: #374151; /* Темно-серый для второстепенного */
+            --accent-color: #2563EB; /* Профессиональный синий */
+            --border-color: #E5E7EB;
+            --bg-color: #f3f4f6;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             margin: 0;
-            padding: 20px;
-            color: var(--text-color);
+            padding: 40px 0;
+            color: var(--primary-color);
             display: flex;
             justify-content: center;
+            line-height: 1.5;
         }
 
-        /* Кнопка скачивания */
+        /* Кнопка скачивания - стильная плавающая */
         #download-btn {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: var(--accent-color);
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 24px;
+            border-radius: 50px;
             cursor: pointer;
             font-size: 16px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             z-index: 1000;
-            font-weight: bold;
+            transition: transform 0.2s, background-color 0.2s;
         }
 
         #download-btn:hover {
-            background-color: #1c5980;
+            transform: translateY(-2px);
+            background-color: #000;
         }
 
         /* Лист A4 */
         .cv-container {
             background: white;
             width: 210mm;
-            min-height: 297mm;
-            padding: 15mm 15mm; /* Поля */
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            /* min-height: 297mm; Убираем жесткую высоту, чтобы контент не резался, html2pdf сам разобьет страницы */
+            padding: 12mm 15mm; 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             box-sizing: border-box;
         }
 
-        /* Типографика */
-        h1 {
-            margin: 0;
-            font-size: 26px;
-            text-transform: uppercase;
-            color: var(--primary-color);
-            letter-spacing: 1px;
+        /* HEADER */
+        header {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
         }
 
-        h2 {
-            font-size: 16px;
-            color: var(--accent-color);
-            border-bottom: 2px solid #eee;
-            padding-bottom: 5px;
-            margin-top: 20px;
-            margin-bottom: 10px;
+        h1 {
+            margin: 0;
+            font-size: 28px;
             text-transform: uppercase;
+            letter-spacing: -0.5px;
+            color: var(--primary-color);
+            font-weight: 800;
         }
 
         .role-title {
             font-size: 16px;
-            font-weight: 500;
-            color: #555;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-top: 4px;
             margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .contact-info {
-            font-size: 12px;
-            margin-bottom: 20px;
-            color: #666;
+            font-size: 11px;
+            color: var(--secondary-color);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-weight: 500;
         }
         
         .contact-info a {
-            color: #666;
+            color: var(--secondary-color);
             text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s;
         }
 
-        p, li {
-            font-size: 12px; /* Размер шрифта для плотного текста */
-            line-height: 1.5;
+        .contact-info a:hover {
+            border-bottom: 1px solid var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        /* SECTIONS */
+        section {
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 13px;
+            color: #6B7280; /* Светло-серый заголовок секции */
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 11px;
+            margin-bottom: 8px;
+            text-align: justify;
+            color: #374151;
+        }
+
+        /* LISTS */
+        ul {
+            padding-left: 16px;
+            margin-top: 5px;
             margin-bottom: 5px;
         }
 
-        ul {
-            padding-left: 18px;
-            margin-top: 5px;
+        li {
+            font-size: 11px;
+            margin-bottom: 4px;
+            color: #374151;
+            padding-left: 5px;
+        }
+        
+        li::marker {
+            color: var(--accent-color);
+            font-size: 14px;
         }
 
+        /* EXPERIENCE BLOCK */
         .job-block {
-            margin-bottom: 15px;
-            page-break-inside: avoid; /* Избегать разрыва блока при печати */
+            margin-bottom: 18px;
+            page-break-inside: avoid;
         }
 
         .job-header {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
 
-        .company {
-            font-weight: bold;
-            font-size: 14px;
+        .company-name {
+            font-weight: 800;
+            font-size: 13px;
+            color: var(--primary-color);
         }
 
-        .location, .date {
+        .job-meta {
+            font-size: 11px;
+            color: #6B7280;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .job-role {
+            font-weight: 600;
             font-size: 12px;
-            color: #666;
-            font-style: italic;
-        }
-
-        .job-title {
-            font-weight: bold;
-            font-style: italic;
-            margin-bottom: 5px;
+            color: var(--accent-color);
+            margin-bottom: 6px;
             display: block;
-        }
-
-        .tech-skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+            font-style: italic;
         }
         
-        .tech-category {
-            font-weight: bold;
-            margin-right: 5px;
+        .job-desc-italic {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 6px;
+            display: block;
+            font-size: 11px;
         }
 
-        /* Скрытие кнопки при генерации PDF (на всякий случай) */
+        /* COMPETENCIES */
+        .skills-list li {
+            margin-bottom: 6px;
+        }
+
+        /* PDF GENERATION HIDDEN ELEMENTS */
         @media print {
-            body { background: white; }
+            body { background: white; padding: 0; }
             #download-btn { display: none; }
-            .cv-container { box-shadow: none; margin: 0; width: 100%; }
+            .cv-container { box-shadow: none; width: 100%; padding: 0; }
         }
     </style>
 </head>
@@ -160,11 +216,13 @@
             <h1>Vlad Yasinski</h1>
             <div class="role-title">Head of User Acquisition / Growth</div>
             <div class="contact-info">
-                Warsaw, Poland | 
-                <a href="mailto:email@example.com">insk.ma@gmail.com</a> | 
-                <a href="tel:+48573337034">[Your Phone Here]</a> | 
-                <a href="https://linkedin.com/in/vlad-yasinski-98085192">LinkedIn Profile</a> | 
-                <a href="https://roimobi.com">roimobi.com</a>
+                <span>Warsaw, Poland</span>
+                <span>•</span>
+                <a href="mailto:email@example.com">insk.ma@gmail.com</a> <span>•</span>
+                <a href="tel:+48000000000">+48 573 337 034</a> <span>•</span>
+                <a href="https://linkedin.com/in/vlad-yasinski-98085192" target="_blank">LinkedIn</a>
+                <span>•</span>
+                <a href="https://roimobi.com" target="_blank">roimobi.com</a>
             </div>
         </header>
 
@@ -177,7 +235,7 @@
 
         <section>
             <h2>Core Competencies</h2>
-            <ul>
+            <ul class="skills-list">
                 <li><strong>Strategies:</strong> Web2App & App2App Growth, P&L Management, Unit Economics (CAC/LTV/ROAS), Subscription Monetization.</li>
                 <li><strong>Channels (Mobile & Web):</strong> Meta, TikTok, Google (Search/UAC), Apple Search Ads (ASA), Snapchat, Pinterest, Unity, IronSource, Mintegral, AppLovin, Native/Web-Push.</li>
                 <li><strong>Tech Stack:</strong> Tableau, Looker, AppsFlyer, Adjust, FunnelFox, RevenueCat, Adapty, Sensor Tower, AppMagic.</li>
@@ -190,11 +248,11 @@
 
             <div class="job-block">
                 <div class="job-header">
-                    <span class="company">ROIMOBI.COM</span>
-                    <span class="location">Remote</span>
+                    <span class="company-name">ROIMOBI.COM</span>
+                    <span class="job-meta">Remote | Mar 2025 – Present</span>
                 </div>
-                <span class="job-title">Head of User Acquisition | Mar 2025 – Present</span>
-                <p><em>Leveraging Web2App flows to bypass IDFA limitations and scale revenue via Stripe & IAP.</em></p>
+                <span class="job-role">Head of User Acquisition</span>
+                <span class="job-desc-italic">Leveraging Web2App flows to bypass IDFA limitations and scale revenue via Stripe & IAP.</span>
                 <ul>
                     <li><strong>Architected the entire Growth & UA infrastructure</strong> from ground up, implementing BI dashboards, FunnelFox attribution, and server-side tracking for granular funnel visibility.</li>
                     <li><strong>Designing end-to-end Web2App funnels</strong> (Traffic → Web Landing → Stripe Payment → App Install), significantly improving LTV and recurring revenue consistency.</li>
@@ -205,11 +263,11 @@
 
             <div class="job-block">
                 <div class="job-header">
-                    <span class="company">AIBY</span>
-                    <span class="location">Full-time</span>
+                    <span class="company-name">AIBY</span>
+                    <span class="job-meta">Full-time | Feb 2024 – May 2025</span>
                 </div>
-                <span class="job-title">User Acquisition Manager | Feb 2024 – May 2025</span>
-                <p><em>Managed UA for flagship products in a structured enterprise environment.</em></p>
+                <span class="job-role">User Acquisition Manager</span>
+                <span class="job-desc-italic">Managed UA for flagship products in a structured enterprise environment.</span>
                 <ul>
                     <li><strong>Propelled "Themify" to the #1 Rank in the US App Store</strong> (Graphics/Design category), driving massive volume while maintaining strict profitability targets.</li>
                     <li><strong>Executed high-budget campaigns</strong> focusing on ROAS and Retention, successfully aligning acquisition strategy with rigorous corporate financial KPIs.</li>
@@ -220,10 +278,10 @@
 
             <div class="job-block">
                 <div class="job-header">
-                    <span class="company">ROIMOBI.COM</span>
-                    <span class="location">Remote / Hybrid</span>
+                    <span class="company-name">ROIMOBI.COM</span>
+                    <span class="job-meta">Remote / Hybrid | Sep 2023 – Feb 2024</span>
                 </div>
-                <span class="job-title">Lead UA Utilities | Sep 2023 – Feb 2024</span>
+                <span class="job-role">Lead UA Utilities</span>
                 <ul>
                     <li><strong>Turned around the Utilities portfolio</strong>, rebuilding acquisition economics to restore positive ROI and profitability across the board.</li>
                     <li><strong>Defined budget allocation logic and scaling thresholds</strong>, establishing a repeatable playbook for launching and scaling new utility apps.</li>
@@ -232,7 +290,11 @@
             </div>
 
             <div class="job-block">
-                <span class="job-title">User Acquisition Manager | Apr 2023 – Sep 2023</span>
+                <div class="job-header">
+                    <span class="company-name">ROIMOBI.COM</span>
+                    <span class="job-meta">Hybrid | Apr 2023 – Sep 2023</span>
+                </div>
+                <span class="job-role">User Acquisition Manager</span>
                 <ul>
                     <li>Launched and optimized aggressive UA campaigns across Web2App and App2App flows.</li>
                     <li>Conducted deep competitor analysis and market research to identify untapped scaling opportunities in the Utilities vertical.</li>
@@ -241,11 +303,11 @@
 
             <div class="job-block">
                 <div class="job-header">
-                    <span class="company">BP MOBILE</span>
-                    <span class="location">Minsk, Belarus</span>
+                    <span class="company-name">BP MOBILE</span>
+                    <span class="job-meta">Minsk, Belarus | Feb 2020 – Apr 2023</span>
                 </div>
-                <span class="job-title">UA Manager | Feb 2020 – Apr 2023</span>
-                <p><em>Flagship Product Ownership: InPulse (Health & Fitness).</em></p>
+                <span class="job-role">UA Manager</span>
+                <span class="job-desc-italic">Flagship Product Ownership: InPulse (Health & Fitness).</span>
                 <ul>
                     <li><strong>Scaled "InPulse" to the #1 position in the US App Store</strong> (Health & Fitness), dominating a highly competitive vertical.</li>
                     <li><strong>Managed multi-channel acquisition</strong> across Tier-1 markets (US/EU) with strict adherence to unit economics and payback windows.</li>
@@ -258,8 +320,8 @@
             <h2>Education</h2>
             <div class="job-block">
                 <div class="job-header">
-                    <span class="company">BSUIR</span>
-                    <span class="date">2019</span>
+                    <span class="company-name">BSUIR, Belarus</span>
+                    <span class="job-meta">2019</span>
                 </div>
                 <div>Bachelor</div>
             </div>
@@ -271,21 +333,18 @@
             const element = document.getElementById('cv-content');
             const button = document.getElementById('download-btn');
             
-            // Скрываем кнопку перед генерацией (хотя html2pdf обычно берет только элемент)
-            button.style.display = 'none';
+            button.style.display = 'none'; // Скрываем кнопку перед снимком
 
             const opt = {
-                margin:       [10, 10, 10, 10], // Поля (верх, лево, низ, право) в мм
+                margin:       [0, 0, 0, 0], // Отступы контролируются CSS (.cv-container padding)
                 filename:     'Vlad_Yasinski_CV.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true }, // scale 2 для четкости текста
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            // Генерация и сохранение
             html2pdf().set(opt).from(element).save().then(() => {
-                // Возвращаем кнопку после скачивания
-                button.style.display = 'block';
+                button.style.display = 'block'; // Возвращаем кнопку
             });
         }
     </script>
