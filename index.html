@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ROIMOBI | Vlad Yasinski</title>
     <style>
-        /* --- BASE VARIABLES --- */
+        /* --- BASE VARIABLERS --- */
         :root {
             --bg-color: #050505;
             --card-bg: rgba(20, 20, 20, 0.6);
@@ -28,6 +28,7 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            /* --- BACKGROUND GRID EFFECT --- */
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
@@ -35,7 +36,7 @@
             position: relative;
         }
 
-        /* Ambient Glow */
+        /* --- AMBIENT GLOW --- */
         body::before {
             content: '';
             position: fixed;
@@ -73,17 +74,19 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* --- LOGIC: LANGUAGE SWITCHING --- */
+        /* --- LOGIC: LANGUAGE SWITCHING (FIXED) --- */
         
         /* 1. Скрываем все элементы с атрибутом языка по умолчанию */
         [data-lang-content] { display: none; }
 
-        /* 2. Правила для БЛОЧНЫХ элементов (заголовки, параграфы) */
+        /* 2. Правила для БЛОЧНЫХ элементов (заголовки, параграфы, ссылки меню) */
+        /* Добавлены селекторы .desktop-nav a */
         body.lang-ru h1[data-lang-content="ru"], body.lang-en h1[data-lang-content="en"], body.lang-pl h1[data-lang-content="pl"],
         body.lang-ru h2[data-lang-content="ru"], body.lang-en h2[data-lang-content="en"], body.lang-pl h2[data-lang-content="pl"],
         body.lang-ru p[data-lang-content="ru"], body.lang-en p[data-lang-content="en"], body.lang-pl p[data-lang-content="pl"],
         body.lang-ru div[data-lang-content="ru"], body.lang-en div[data-lang-content="en"], body.lang-pl div[data-lang-content="pl"],
-        body.lang-ru a.mobile-link[data-lang-content="ru"], body.lang-en a.mobile-link[data-lang-content="en"], body.lang-pl a.mobile-link[data-lang-content="pl"] {
+        body.lang-ru a.mobile-link[data-lang-content="ru"], body.lang-en a.mobile-link[data-lang-content="en"], body.lang-pl a.mobile-link[data-lang-content="pl"],
+        body.lang-ru .desktop-nav a[data-lang-content="ru"], body.lang-en .desktop-nav a[data-lang-content="en"], body.lang-pl .desktop-nav a[data-lang-content="pl"] {
             display: block;
         }
 
@@ -352,10 +355,6 @@
         <a href="#cases" class="mobile-link" data-lang-content="ru">Кейсы</a>
         <a href="#cases" class="mobile-link" data-lang-content="en">Cases</a>
         <a href="#cases" class="mobile-link" data-lang-content="pl">Case'y</a>
-
-           <a href="https://roimobi.com/cv.html" class="mobile-link" data-lang-content="ru">CV</a>
-        <a href="https://roimobi.com/cv.html" class="mobile-link" data-lang-content="en">CV</a>
-        <a href="https://roimobi.com/cv.html" class="mobile-link" data-lang-content="pl">CV</a>
 
         <a href="https://calendly.com/vlad-yasinski-roimobi/30min" target="_blank" class="mobile-link highlight" style="margin-top: 20px;">
             <span data-lang-content="ru">Записаться на звонок</span>
