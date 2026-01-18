@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vlad Yasinski - CV</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #2980b9;
+            --text-color: #333;
+            --bg-color: #f4f4f4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Кнопка скачивания */
+        #download-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+            font-weight: bold;
+        }
+
+        #download-btn:hover {
+            background-color: #1c5980;
+        }
+
+        /* Лист A4 */
+        .cv-container {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm 15mm; /* Поля */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        /* Типографика */
+        h1 {
+            margin: 0;
+            font-size: 26px;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-size: 16px;
+            color: var(--accent-color);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .role-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .contact-info {
+            font-size: 12px;
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .contact-info a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        p, li {
+            font-size: 12px; /* Размер шрифта для плотного текста */
+            line-height: 1.5;
+            margin-bottom: 5px;
+        }
+
+        ul {
+            padding-left: 18px;
+            margin-top: 5px;
+        }
+
+        .job-block {
+            margin-bottom: 15px;
+            page-break-inside: avoid; /* Избегать разрыва блока при печати */
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 3px;
+        }
+
+        .company {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .location, .date {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .job-title {
+            font-weight: bold;
+            font-style: italic;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .tech-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .tech-category {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        /* Скрытие кнопки при генерации PDF (на всякий случай) */
+        @media print {
+            body { background: white; }
+            #download-btn { display: none; }
+            .cv-container { box-shadow: none; margin: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button id="download-btn" onclick="generatePDF()">Download PDF</button>
+
+    <div class="cv-container" id="cv-content">
+        <header>
+            <h1>Vlad Yasinski</h1>
+            <div class="role-title">Head of User Acquisition / Growth</div>
+            <div class="contact-info">
+                Warsaw, Poland | 
+                <a href="mailto:email@example.com">[Your Email Here]</a> | 
+                <a href="tel:+48000000000">[Your Phone Here]</a> | 
+                <a href="https://linkedin.com/in/vlad-yasinski-98085192">LinkedIn Profile</a> | 
+                <a href="https://roimobi.com">roimobi.com</a>
+            </div>
+        </header>
+
+        <section>
+            <h2>Professional Summary</h2>
+            <p>
+                <strong>Results-driven Growth Leader with 9+ years of experience</strong> scaling mobile and web products. Proven track record of propelling apps to <strong>#1 US App Store positions</strong> (InPulse, Themify) and managing <strong>7-figure monthly budgets</strong>. Deep expertise in building <strong>Web2App ecosystems</strong> from scratch, optimizing full-funnel unit economics (Stripe/IAP), and leading high-performance UA teams. Adept at bridging the gap between technical UA execution and high-level business strategy (P&L, LTV modeling) across startups and large corporate structures.
+            </p>
+        </section>
+
+        <section>
+            <h2>Core Competencies</h2>
+            <ul>
+                <li><strong>Strategies:</strong> Web2App & App2App Growth, P&L Management, Unit Economics (CAC/LTV/ROAS), Subscription Monetization.</li>
+                <li><strong>Channels (Mobile & Web):</strong> Meta, TikTok, Google (Search/UAC), Apple Search Ads (ASA), Snapchat, Pinterest, Unity, IronSource, Mintegral, AppLovin, Native/Web-Push.</li>
+                <li><strong>Tech Stack:</strong> Tableau, Looker, AppsFlyer, Adjust, FunnelFox, RevenueCat, Adapty, Sensor Tower, AppMagic.</li>
+                <li><strong>Verticals:</strong> Health & Fitness, Utilities, AI, Dating, Gaming.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Professional Experience</h2>
+
+            <div class="job-block">
+                <div class="job-header">
+                    <span class="company">ROIMOBI.COM</span>
+                    <span class="location">Remote</span>
+                </div>
+                <span class="job-title">Head of User Acquisition | Mar 2025 – Present</span>
+                <p><em>Leveraging Web2App flows to bypass IDFA limitations and scale revenue via Stripe & IAP.</em></p>
+                <ul>
+                    <li><strong>Architected the entire Growth & UA infrastructure</strong> from ground up, implementing BI dashboards, FunnelFox attribution, and server-side tracking for granular funnel visibility.</li>
+                    <li><strong>Designing end-to-end Web2App funnels</strong> (Traffic → Web Landing → Stripe Payment → App Install), significantly improving LTV and recurring revenue consistency.</li>
+                    <li><strong>Owning P&L and Unit Economics</strong>, balancing hybrid monetization models (Ads + IAP + Web Subscriptions) to maximize ROAS and shorten payback periods.</li>
+                    <li><strong>Scaling 7-figure budgets</strong> across a diversified mix of traffic sources while leading the strategy for creative production and funnel experimentation.</li>
+                </ul>
+            </div>
+
+            <div class="job-block">
+                <div class="job-header">
+                    <span class="company">AIBY</span>
+                    <span class="location">Full-time</span>
+                </div>
+                <span class="job-title">User Acquisition Manager | Feb 2024 – May 2025</span>
+                <p><em>Managed UA for flagship products in a structured enterprise environment.</em></p>
+                <ul>
+                    <li><strong>Propelled "Themify" to the #1 Rank in the US App Store</strong> (Graphics/Design category), driving massive volume while maintaining strict profitability targets.</li>
+                    <li><strong>Executed high-budget campaigns</strong> focusing on ROAS and Retention, successfully aligning acquisition strategy with rigorous corporate financial KPIs.</li>
+                    <li><strong>Led cross-functional growth initiatives</strong>, collaborating with ASO, Motion Design, and Product teams to iterate on creatives and store pages, resulting in increased conversion rates.</li>
+                    <li><strong>Optimized the creative lifecycle</strong>, implementing data-driven testing frameworks that reduced creative fatigue and sustained scale.</li>
+                </ul>
+            </div>
+
+            <div class="job-block">
+                <div class="job-header">
+                    <span class="company">ROIMOBI.COM</span>
+                    <span class="location">Remote / Hybrid</span>
+                </div>
+                <span class="job-title">Lead UA Utilities | Sep 2023 – Feb 2024</span>
+                <ul>
+                    <li><strong>Turned around the Utilities portfolio</strong>, rebuilding acquisition economics to restore positive ROI and profitability across the board.</li>
+                    <li><strong>Defined budget allocation logic and scaling thresholds</strong>, establishing a repeatable playbook for launching and scaling new utility apps.</li>
+                    <li><strong>Standardized reporting processes</strong>, giving stakeholders clear visibility into P&L and growth metrics.</li>
+                </ul>
+            </div>
+
+            <div class="job-block">
+                <span class="job-title">User Acquisition Manager | Apr 2023 – Sep 2023</span>
+                <ul>
+                    <li>Launched and optimized aggressive UA campaigns across Web2App and App2App flows.</li>
+                    <li>Conducted deep competitor analysis and market research to identify untapped scaling opportunities in the Utilities vertical.</li>
+                </ul>
+            </div>
+
+            <div class="job-block">
+                <div class="job-header">
+                    <span class="company">BP MOBILE</span>
+                    <span class="location">Minsk, Belarus</span>
+                </div>
+                <span class="job-title">UA Manager | Feb 2020 – Apr 2023</span>
+                <p><em>Flagship Product Ownership: InPulse (Health & Fitness).</em></p>
+                <ul>
+                    <li><strong>Scaled "InPulse" to the #1 position in the US App Store</strong> (Health & Fitness), dominating a highly competitive vertical.</li>
+                    <li><strong>Managed multi-channel acquisition</strong> across Tier-1 markets (US/EU) with strict adherence to unit economics and payback windows.</li>
+                    <li><strong>Mastered creative testing frameworks</strong>, producing high-performing ad assets that drove volume for over 3 years.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Education</h2>
+            <div class="job-block">
+                <div class="job-header">
+                    <span class="company">[University Name]</span>
+                    <span class="date">[Years attended]</span>
+                </div>
+                <div>[Degree Name], [Major]</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function generatePDF() {
+            const element = document.getElementById('cv-content');
+            const button = document.getElementById('download-btn');
+            
+            // Скрываем кнопку перед генерацией (хотя html2pdf обычно берет только элемент)
+            button.style.display = 'none';
+
+            const opt = {
+                margin:       [10, 10, 10, 10], // Поля (верх, лево, низ, право) в мм
+                filename:     'Vlad_Yasinski_CV.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true }, // scale 2 для четкости текста
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Генерация и сохранение
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Возвращаем кнопку после скачивания
+                button.style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html>
